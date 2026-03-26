@@ -1,0 +1,47 @@
+.card {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-soft);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-strong);
+}
+
+.thumbButton {
+  border: 0;
+  padding: 0;
+  width: 100%;
+  cursor: pointer;
+  background: transparent;
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.deleteButton {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 0;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(7, 7, 7, 0.85);
+  color: #fff;
+  cursor: pointer;
+  transition: background 180ms ease;
+}
+
+.deleteButton:hover {
+  background: #8f2f2f;
+}

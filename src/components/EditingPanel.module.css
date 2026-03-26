@@ -1,0 +1,128 @@
+.editingPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionWrapper {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1E1E1E;
+  border: 1px solid transparent;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.editingPanel[data-theme="light"] .sectionWrapper {
+  background: #E4D4C8;
+  border-color: transparent;
+}
+
+.sectionWrapper:hover {
+  border: 1px solid #A47551;
+}
+
+.editingPanel[data-theme="light"] .sectionWrapper:hover {
+  border: 1px solid #A47551;
+}
+
+.sectionHeader {
+  width: 100%;
+  padding: 16px;
+  background: transparent;
+  border: none;
+  color: #E4D4C8;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.editingPanel[data-theme="light"] .sectionHeader {
+  color: #332013;
+}
+
+.sectionHeader:hover:not(:disabled) {
+  background: transparent;
+  color: #E4D4C8;
+}
+
+.editingPanel[data-theme="light"] .sectionHeader:hover:not(:disabled) {
+  color: #332013;
+}
+
+.sectionHeader:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sectionHeader.active:not(:disabled) {
+  background: transparent;
+  border-bottom: 1px solid #A47551;
+  color: white;
+}
+
+.editingPanel[data-theme="light"] .sectionHeader.active:not(:disabled) {
+  background: #D0B49F;
+  border: none;
+  border-bottom: none;
+  color: #332013;
+}
+
+.sectionTitle {
+  flex: 1;
+  text-align: left;
+}
+
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+  color: #A47551;
+}
+
+.sectionHeader.active:not(:disabled) .arrow {
+  color: #A47551;
+}
+
+.editingPanel[data-theme="light"] .sectionHeader.active:not(:disabled) .arrow {
+  color: #A47551;
+}
+
+.arrow.expanded {
+  transform: rotate(90deg);
+}
+
+.sectionContent {
+  padding: 16px;
+  border-top: 1px solid #2b2b2b;
+  background: #2b2b2b;
+  animation: slideDown 0.3s ease forwards;
+  color: #E4D4C8;
+}
+
+.editingPanel[data-theme="light"] .sectionContent {
+  background: #E4D4C8;
+  border-top: 1px solid #D0B49F;
+  color: #332013;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

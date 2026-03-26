@@ -1,0 +1,122 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Space+Grotesk:wght@400;500;600&display=swap");
+
+.appShell {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  font-family: "Space Grotesk", sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-main);
+  transition: background 220ms ease, color 220ms ease;
+}
+
+.themeDark {
+  --bg-main: #121212;
+  --bg-contrast: #181818;
+  --card-bg: #1e1e1e;
+  --card-elevated: #252525;
+  --line-color: rgba(255, 255, 255, 0.08);
+  --text-primary: #ffffff;
+  --text-muted: #bfbfbf;
+  --accent: #c89b6d;
+  --success: #77db8d;
+  --shadow-soft: 0 14px 35px rgba(0, 0, 0, 0.28);
+  --shadow-strong: 0 20px 44px rgba(0, 0, 0, 0.36);
+}
+
+.themeLight {
+  --bg-main: #ece8df;
+  --bg-contrast: #faf7f1;
+  --card-bg: #f8f2e8;
+  --card-elevated: #ffffff;
+  --line-color: rgba(0, 0, 0, 0.1);
+  --text-primary: #2f261d;
+  --text-muted: #6e665f;
+  --accent: #b78355;
+  --success: #208c3f;
+  --shadow-soft: 0 14px 35px rgba(56, 41, 24, 0.1);
+  --shadow-strong: 0 20px 44px rgba(56, 41, 24, 0.14);
+}
+
+.appContainer {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 1.35rem 1rem 1.9rem;
+  position: relative;
+  z-index: 1;
+  animation: slideIn 360ms ease;
+}
+
+.contentGrid {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  gap: 1rem;
+}
+
+.leftPane {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.rightPane {
+  min-width: 0;
+}
+
+.downloadButtonContainer {
+  width: 100%;
+}
+
+.downloadButton {
+  width: 100%;
+  padding: 14px 16px;
+  background: #A47551;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.downloadButton:hover:not(:disabled) {
+  background: #8B5A39;
+  border: 1px solid #A47551;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(164, 117, 81, 0.3);
+}
+
+.downloadButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.downloadButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #A47551;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}

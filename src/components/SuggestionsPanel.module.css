@@ -1,0 +1,59 @@
+.buttonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.buttonGrid.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.button {
+  background: linear-gradient(135deg, rgba(120, 90, 65, 0.6), rgba(100, 75, 55, 0.6));
+  border: 1px solid rgba(164, 117, 81, 0.3);
+  color: #E4D4C8;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.buttonGrid[data-theme="light"] .button {
+  background: #D0B49F;
+  border: 1px solid #A47551;
+  color: #332013;
+}
+
+.button:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(140, 105, 75, 0.8), rgba(120, 90, 65, 0.8));
+  border-color: rgba(164, 117, 81, 0.6);
+  transform: translateY(-2px);
+}
+
+.buttonGrid[data-theme="light"] .button:hover:not(:disabled) {
+  background: #D0B49F;
+  border-color: #A47551;
+  transform: translateY(-2px);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button.active:not(:disabled) {
+  background: linear-gradient(135deg, #A47551, #8B5A39);
+  border-color: #A47551;
+  box-shadow: 0 0 20px rgba(164, 117, 81, 0.4);
+}
+
+.buttonGrid[data-theme="light"] .button.active:not(:disabled) {
+  background: #D0B49F;
+  border-color: #A47551;
+  color: #332013;
+  box-shadow: 0 0 20px rgba(164, 117, 81, 0.3);
+}

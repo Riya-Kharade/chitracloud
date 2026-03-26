@@ -1,0 +1,109 @@
+.sliderContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.sliderContainer.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.sliderGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  color: #E4D4C8;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sliderContainer[data-theme="light"] .label {
+  color: #332013;
+}
+
+.value {
+  color: #A47551;
+  font-weight: 600;
+  min-width: 40px;
+  text-align: right;
+}
+
+.slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(
+    to right,
+    rgba(120, 90, 65, 0.4),
+    rgba(120, 90, 65, 0.6)
+  );
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sliderContainer[data-theme="light"] .slider {
+  background: linear-gradient(
+    to right,
+    rgba(164, 117, 81, 0.3),
+    rgba(164, 117, 81, 0.5)
+  );
+}
+
+.slider:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #A47551, #8B5A39);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 10px rgba(164, 117, 81, 0.4);
+}
+
+.slider::-webkit-slider-thumb:hover:not(:disabled) {
+  width: 18px;
+  height: 18px;
+  box-shadow: 0 0 15px rgba(164, 117, 81, 0.6);
+}
+
+.slider:disabled::-webkit-slider-thumb {
+  opacity: 0.5;
+}
+
+.slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #A47551, #8B5A39);
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 10px rgba(164, 117, 81, 0.4);
+}
+
+.slider::-moz-range-thumb:hover:not(:disabled) {
+  width: 18px;
+  height: 18px;
+  box-shadow: 0 0 15px rgba(164, 117, 81, 0.6);
+}
+
+.slider:disabled::-moz-range-thumb {
+  opacity: 0.5;
+}

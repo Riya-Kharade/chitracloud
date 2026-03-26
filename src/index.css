@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  background: #121212;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+code {
+  font-family: Consolas, Menlo, Monaco, monospace;
+}
