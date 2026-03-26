@@ -119,7 +119,7 @@ ChitraCloud allows users to **upload, edit, and manage images** with real-time p
 | -------- | ----------------- |
 | Frontend | React.js          |
 | Backend  | Node.js + Express |
-| Cloud    | AWS S3, DynamoDB  |
+| Cloud    | AWS S3,IAM, DynamoDB  |
 | Styling  | CSS Modules       |
 
 ---
