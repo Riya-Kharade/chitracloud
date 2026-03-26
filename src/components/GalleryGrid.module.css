@@ -30,7 +30,53 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.75rem;
 }
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 10px;
+}
 
+.card {
+  background: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 10px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.card img {
+  width: 100%;
+  height: 180px;       /* 🔥 controls image size */
+  object-fit: cover;   /* crop nicely */
+  border-radius: 8px;
+}
+
+.card p {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #ddd;
+  word-break: break-word;
+}
+.deleteBtn {
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: #ff4d4d;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.deleteBtn:hover {
+  background: #ff1a1a;
+}
 @media (max-width: 1050px) {
   .grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
