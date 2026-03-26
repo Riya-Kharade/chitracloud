@@ -11,9 +11,12 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1017.0",
+    "@aws-sdk/lib-dynamodb": "^3.1017.0",
     "aws-sdk": "^2.1693.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "multer": "^2.1.1"
+    "multer": "^2.1.1",
+    "uuid": "^13.0.0"
   }
 }
