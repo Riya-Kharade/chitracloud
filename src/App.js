@@ -96,8 +96,13 @@ function App() {
       .then((res) => res.json())
       .then(async (data) => {
         const imagesWithMeta = await Promise.all(
-          data.map((img) => resolveImageMeta(img))
-        );
+  data.map((img) =>
+    resolveImageMeta({
+      ...img,
+      type: img.type || "original", // ⭐ IMPORTANT FIX
+    })
+  )
+);
         setGallery(imagesWithMeta);
       })
       .catch((err) => console.error("Fetch error:", err));
@@ -241,7 +246,13 @@ function App() {
   const handleAdjustmentChange = (adjustmentId, value) => {
     setAdjustments((prev) => ({ ...prev, [adjustmentId]: value }));
   };
+const originalImages = gallery.filter(
+  img => !img.type || img.type === "original"
+);
 
+const editedImages = gallery.filter(
+  img => img.type === "edited"
+);
   return (
     <div className={`appShell ${darkMode ? "themeDark" : "themeLight"}`}>
       <main className="appContainer">
@@ -294,11 +305,19 @@ function App() {
           </section>
         </section>
 
-        <GalleryGrid
-          images={gallery}
-          onSelect={setSelectedImage}
-          onDelete={deleteImage}
-        />
+       <h2 style={{ marginTop: "20px" }}>📸 Original Images</h2>
+<GalleryGrid
+  images={originalImages}
+  onSelect={setSelectedImage}
+  onDelete={deleteImage}
+/>
+
+<h2 style={{ marginTop: "20px" }}>🎨 Edited Images</h2>
+<GalleryGrid
+  images={editedImages}
+  onSelect={setSelectedImage}
+  onDelete={deleteImage}
+/>
       </main>
     </div>
   );
