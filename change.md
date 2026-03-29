@@ -1,71 +1,88 @@
-# Fix Non-Working Adjust Sliders – ChitraCloud
+# Image Gallery System
 
-We are building a React image editor.
+## 📌 Objective
 
-Problem:
-- Highlights, Shadows, White Point sliders do not affect image
-- Because CSS does not support these filters directly
+Build a **React-based Image Gallery System** with real-time updates, preview functionality, and AWS backend integration.
 
 ---
 
-## Goal
+## 🚀 Requirements
 
-Simulate these effects using supported CSS filters.
+### 🖼 Gallery Display
 
----
+* Fetch images from backend API (`GET /images`)
+* Store images in React state
+* Display images in a **responsive grid layout**
+* Each image card should include:
 
-## Implementation
-
-### 1. Update getAdjustmentFilters function
-
-Modify it like this:
-
-const getAdjustmentFilters = (adjustments) => {
-  const {
-    brightness = 0,
-    contrast = 0,
-    saturation = 0,
-    exposure = 0,
-    highlights = 0,
-    shadows = 0,
-    whitePoint = 0
-  } = adjustments;
-
-  let filters = [];
-
-  // Basic
-  filters.push(`brightness(${100 + brightness + exposure}%)`);
-  filters.push(`contrast(${100 + contrast}%)`);
-  filters.push(`saturate(${100 + saturation}%)`);
-
-  // Simulate highlights (increase brightness + reduce contrast)
-  if (highlights !== 0) {
-    filters.push(`brightness(${100 + highlights}%)`);
-    filters.push(`contrast(${100 - highlights * 0.5}%)`);
-  }
-
-  // Simulate shadows (increase contrast + brightness slightly)
-  if (shadows !== 0) {
-    filters.push(`contrast(${100 + shadows}%)`);
-    filters.push(`brightness(${100 + shadows * 0.3}%)`);
-  }
-
-  // Simulate white point (brightness + slight saturation)
-  if (whitePoint !== 0) {
-    filters.push(`brightness(${100 + whitePoint}%)`);
-    filters.push(`saturate(${100 + whitePoint * 0.2}%)`);
-  }
-
-  return filters.join(" ");
-};
+  * Image preview
+  * Image name
+  * Delete button
 
 ---
 
-## Output
+### ⚡ Real-Time Update
 
-- Sliders should now affect image
-- Not exact Photoshop-level, but visually noticeable
-- Smooth real-time updates
+* After uploading a new image:
 
-Do not change UI.
-Only improve filter logic.
+  * Add it instantly to the gallery
+  * No page refresh required
+  * Update UI dynamically using state
+
+---
+
+### 🗑 Delete Feature
+
+* Call API: `DELETE /delete/:id`
+* Remove image from UI immediately after deletion
+
+---
+
+### 👆 Image Preview
+
+* When user clicks on an image:
+
+  * Show it in a **preview section**
+  * Maintain a `selectedImage` state
+
+---
+
+### ⚠️ Empty State
+
+* If no images are available:
+
+  * Show message: `"No images found"`
+
+---
+
+### 🧠 Technical Requirements
+
+* Use **React Hooks** (`useState`, `useEffect`)
+* Use **async/await** for API calls
+* Maintain clean and modular code structure
+* Use **CSS Modules** for styling
+* Follow **production-level coding practices**
+
+---
+
+## 🎨 UI Expectations
+
+* Responsive grid layout
+* Card-based design
+* Hover effects for better UX
+* Clean and modern interface
+
+---
+
+## 🌐 Backend Integration
+
+* Compatible with:
+
+  * AWS S3 (image storage)
+  * DynamoDB (metadata storage)
+
+---
+
+## ⭐ Goal
+
+Create a **smooth, real-time, and user-friendly image gallery experience** similar to modern cloud-based apps.

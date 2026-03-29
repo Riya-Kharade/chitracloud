@@ -4,24 +4,25 @@ import styles from "./GalleryGrid.module.css";
 function GalleryGrid() {
   const [images, setImages] = useState([]);
 
-  // 🔥 Fetch images
   useEffect(() => {
     fetch("http://localhost:5000/images")
       .then((res) => res.json())
       .then((data) => {
-        setImages(data);
+        console.log("API Response:", data);
+        setImages(Array.isArray(data) ? data : []);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        setImages([]);
+      });
   }, []);
 
-  // 🔥 Delete function
   const handleDelete = async (id) => {
     try {
       await fetch(`http://localhost:5000/delete/${id}`, {
         method: "DELETE",
       });
 
-      // remove from UI instantly
       setImages((prev) => prev.filter((img) => img.id !== id));
     } catch (err) {
       console.error(err);
@@ -29,21 +30,27 @@ function GalleryGrid() {
   };
 
   return (
-    <div className={styles.galleryGrid}>
-      {images.map((img) => (
-        <div key={img.id} className={styles.card}>
-          <img src={img.url} alt={img.name} />
-          <p>{img.name}</p>
+    <div className={styles.galleryWrapper}>
+      <h2>Gallery</h2>
 
-          {/* 🔥 Delete Button */}
-          <button
-            className={styles.deleteBtn}
-            onClick={() => handleDelete(img.id)}
-          >
-            🗑 Delete
-          </button>
-        </div>
-      ))}
+      <div className={styles.galleryGrid}>
+        {images.length > 0 ? (
+          images.map((img) => (
+            <div key={img.id} className={styles.card}>
+              <img src={img.url} alt={img.name} />
+
+              <div className={styles.info}>
+                <p>{img.name}</p>
+                <button onClick={() => handleDelete(img.id)}>
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No images found</p>
+        )}
+      </div>
     </div>
   );
 }
