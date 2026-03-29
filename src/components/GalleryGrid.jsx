@@ -4,8 +4,6 @@ import styles from "./GalleryGrid.module.css";
 function GalleryGrid({ images, onSelect, onDelete }) {
   return (
     <div className={styles.galleryWrapper}>
-      <h2>Gallery</h2>
-
       <div className={styles.galleryGrid}>
         {images.length > 0 ? (
           images.map((img) => (
@@ -13,7 +11,7 @@ function GalleryGrid({ images, onSelect, onDelete }) {
               <img
                 src={img.url}
                 alt={img.name}
-                onClick={() => onSelect(img)} // ✅ preview click
+                onClick={() => onSelect(img)}
               />
 
               <div className={styles.info}>
