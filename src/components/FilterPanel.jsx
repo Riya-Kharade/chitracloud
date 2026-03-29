@@ -30,15 +30,7 @@ function FilterPanel({ darkMode, isEnabled = true, selectedFilter, onFilterChang
         ))}
       </div>
 
-      <button
-        type="button"
-        className={styles.downloadButton}
-        onClick={onDownload}
-        disabled={disableDownload || !isEnabled}
-        data-theme={darkMode ? "dark" : "light"}
-      >
-        ⬇ Download Image
-      </button>
+    
     </div>
   );
 }

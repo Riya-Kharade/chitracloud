@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef } from "react";
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import Header from "./components/Header";
 import UploadCard from "./components/UploadCard";
 import EditingPanel from "./components/EditingPanel";
@@ -24,29 +24,24 @@ function getAdjustmentFilters(adjustments) {
 
   let filters = [];
 
-  // Basic adjustments - always applied
   filters.push(`brightness(${100 + brightness + exposure}%)`);
   filters.push(`contrast(${100 + contrast}%)`);
   filters.push(`saturate(${100 + saturation}%)`);
 
-  // Warmth filter
   if (warmth !== 0) {
     filters.push(`hue-rotate(${warmth * 0.5}deg)`);
   }
 
-  // Simulate highlights (increase brightness + reduce contrast)
   if (highlights !== 0) {
     filters.push(`brightness(${100 + highlights}%)`);
     filters.push(`contrast(${100 - highlights * 0.5}%)`);
   }
 
-  // Simulate shadows (increase contrast + brightness slightly)
   if (shadows !== 0) {
     filters.push(`contrast(${100 + shadows}%)`);
     filters.push(`brightness(${100 + shadows * 0.3}%)`);
   }
 
-  // Simulate white point (brightness + slight saturation)
   if (whitePoint !== 0) {
     filters.push(`brightness(${100 + whitePoint}%)`);
     filters.push(`saturate(${100 + whitePoint * 0.2}%)`);
@@ -95,10 +90,22 @@ function App() {
 
   const uploadedFiles = useRef(new Set());
 
+  // ✅ NEW: Fetch images from DB on load
+  useEffect(() => {
+    fetch("http://localhost:5000/images")
+      .then((res) => res.json())
+      .then(async (data) => {
+        const imagesWithMeta = await Promise.all(
+          data.map((img) => resolveImageMeta(img))
+        );
+        setGallery(imagesWithMeta);
+      })
+      .catch((err) => console.error("Fetch error:", err));
+  }, []);
+
   const combinedFilterStyle = useMemo(() => {
     let baseFilter = "";
 
-    // Apply filter type filter
     if (filterType === "grayscale") {
       baseFilter = "grayscale(100%)";
     } else if (filterType === "sepia") {
@@ -117,7 +124,6 @@ function App() {
       baseFilter = "contrast(1.6)";
     }
 
-    // Apply suggestion filter
     let allFilters = [baseFilter, suggestionFilter, getAdjustmentFilters(adjustments)]
       .filter(Boolean)
       .join(" ");
@@ -146,8 +152,10 @@ function App() {
       }
 
       const data = await response.json();
+
+      // ✅ FIX: use backend id (not makeId)
       const withMeta = await resolveImageMeta({
-        id: makeId(),
+        id: data.id,
         url: data.url,
         name: data.name || file.name,
         size: data.size || file.size,
@@ -165,35 +173,51 @@ function App() {
     }
   };
 
-  const downloadImage = () => {
-    if (!selectedImage?.url) return;
+ const downloadImage = () => {
+  if (!selectedImage?.url) return;
 
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = selectedImage.url;
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.src = selectedImage.url;
 
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
 
-      canvas.width = img.width;
-      canvas.height = img.height;
+    canvas.width = img.width;
+    canvas.height = img.height;
 
-      ctx.filter = combinedFilterStyle;
-      ctx.drawImage(img, 0, 0);
+    ctx.filter = combinedFilterStyle;
+    ctx.drawImage(img, 0, 0);
 
-      const link = document.createElement("a");
-      link.download = "edited-image.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    };
+    // ✅ DOWNLOAD
+    const link = document.createElement("a");
+    link.download = "edited-image.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+
+    // ✅ UPLOAD EDITED IMAGE
+    canvas.toBlob(async (blob) => {
+      const formData = new FormData();
+      formData.append("image", blob, "edited.png");
+      formData.append("type", "edited"); // ⭐ IMPORTANT
+
+      await fetch("http://localhost:5000/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      console.log("Edited image saved");
+    });
   };
+};
+  const deleteImage = async (id) => {
+  await fetch(`http://localhost:5000/delete/${id}`, {
+    method: "DELETE",
+  });
 
-  const deleteImage = (id) => {
-    setGallery((prev) => prev.filter((item) => item.id !== id));
-    setSelectedImage((prev) => (prev?.id === id ? null : prev));
-  };
-
+  setGallery((prev) => prev.filter((img) => img.id !== id));
+};
   const handleApplySuggestion = (effectId, filterValue) => {
     setActiveEffect(effectId);
     setSuggestionFilter(filterValue);
@@ -253,7 +277,6 @@ function App() {
                 className="downloadButton"
                 onClick={downloadImage}
                 disabled={!selectedImage}
-                aria-label="Download edited image"
               >
                 ⬇ Download Image
               </button>
@@ -276,8 +299,6 @@ function App() {
           onSelect={setSelectedImage}
           onDelete={deleteImage}
         />
-
-
       </main>
     </div>
   );

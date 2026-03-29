@@ -18,21 +18,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 🔍 DEBUG (REMOVE LATER)
-console.log("ACCESS:", process.env.AWS_ACCESS_KEY);
-console.log("SECRET:", process.env.AWS_SECRET_KEY);
-
-// ================= MULTER =================
 const upload = multer({ storage: multer.memoryStorage() });
 
-// ================= AWS S3 CONFIG =================
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY,
   secretAccessKey: process.env.AWS_SECRET_KEY,
   region: "ap-south-1",
 });
 
-// ================= UPLOAD API =================
+// ================= UPLOAD =================
 app.post("/upload", upload.single("image"), async (req, res) => {
   try {
     if (!req.file) {
@@ -48,12 +42,10 @@ app.post("/upload", upload.single("image"), async (req, res) => {
       ContentType: req.file.mimetype,
     };
 
-    // Upload to S3
     const uploadResult = await s3.upload(params).promise();
-
+const type = req.body.type || "original";
     const imageId = uuidv4();
 
-    // Save metadata in DynamoDB
     await docClient.send(
       new PutCommand({
         TableName: "ChitraCloudImages",
@@ -63,6 +55,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
           name: req.file.originalname,
           size: req.file.size,
           uploadedAt: new Date().toISOString(),
+          type: type
         },
       })
     );
@@ -75,11 +68,11 @@ app.post("/upload", upload.single("image"), async (req, res) => {
     });
   } catch (err) {
     console.error("UPLOAD ERROR:", err);
-    res.status(500).json({ error: "Upload failed" });
+    res.status(500).json({ error: err.message });
   }
 });
 
-// ================= GET ALL IMAGES =================
+// ================= GET =================
 app.get("/images", async (req, res) => {
   try {
     const data = await docClient.send(
@@ -95,12 +88,11 @@ app.get("/images", async (req, res) => {
   }
 });
 
-// ================= DELETE IMAGE =================
+// ================= DELETE =================
 app.delete("/delete/:id", async (req, res) => {
   try {
     const imageId = req.params.id;
 
-    // Get all items
     const data = await docClient.send(
       new ScanCommand({
         TableName: "ChitraCloudImages",
@@ -113,18 +105,14 @@ app.delete("/delete/:id", async (req, res) => {
       return res.status(404).json({ error: "Image not found" });
     }
 
-    // Extract S3 key
-    const key = item.url.split(".com/")[1];
+    const key = item.url.split(".amazonaws.com/")[1];
 
-    // Delete from S3
-    await s3
-      .deleteObject({
-        Bucket: "chitracloud-riya-210",
-        Key: key,
-      })
-      .promise();
+    await s3.deleteObject({
+      Bucket: "chitracloud-riya-210",
+      Key: key,
+    }).promise();
 
-    // Delete from DynamoDB
+    // ✅ FIXED LINE
     await docClient.send(
       new DeleteCommand({
         TableName: "ChitraCloudImages",
@@ -133,13 +121,14 @@ app.delete("/delete/:id", async (req, res) => {
     );
 
     res.json({ message: "Deleted successfully" });
+
   } catch (err) {
     console.error("DELETE ERROR:", err);
     res.status(500).json({ error: "Delete failed" });
   }
 });
 
-// ================= SERVER =================
+
 app.listen(5000, () => {
   console.log("🚀 Server running on port 5000");
 });
