@@ -10,6 +10,7 @@ const {
   PutCommand,
   ScanCommand,
   DeleteCommand,
+  UpdateCommand   
 } = require("@aws-sdk/lib-dynamodb");
 
 const { v4: uuidv4 } = require("uuid");
@@ -112,7 +113,6 @@ app.delete("/delete/:id", async (req, res) => {
       Key: key,
     }).promise();
 
-    // ✅ FIXED LINE
     await docClient.send(
       new DeleteCommand({
         TableName: "ChitraCloudImages",
@@ -128,6 +128,39 @@ app.delete("/delete/:id", async (req, res) => {
   }
 });
 
+//rename
+app.put("/rename/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    console.log("Rename API called:", id, name); // 🔥 DEBUG
+
+    if (!name) {
+      return res.status(400).json({ error: "Name is required" });
+    }
+
+    await docClient.send(
+      new UpdateCommand({
+        TableName: "ChitraCloudImages",
+        Key: { id: id },
+        UpdateExpression: "set #n = :name",
+        ExpressionAttributeNames: {
+          "#n": "name",
+        },
+        ExpressionAttributeValues: {
+          ":name": name,
+        },
+      })
+    );
+
+    res.json({ message: "Renamed successfully" });
+
+  } catch (err) {
+    console.error("RENAME ERROR:", err);
+    res.status(500).json({ error: "Rename failed" });
+  }
+});
 
 app.listen(5000, () => {
   console.log("🚀 Server running on port 5000");
