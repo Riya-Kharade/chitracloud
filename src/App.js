@@ -223,6 +223,23 @@ function App() {
 
   setGallery((prev) => prev.filter((img) => img.id !== id));
 };
+const handleRename = async (id, newName) => {
+  // ✅ Update in backend (API)
+  await fetch(`http://localhost:5000/rename/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name: newName }),
+  });
+
+  // ✅ Update frontend state
+  setGallery((prev) =>
+    prev.map((img) =>
+      img.id === id ? { ...img, name: newName } : img
+    )
+  );
+};
   const handleApplySuggestion = (effectId, filterValue) => {
     setActiveEffect(effectId);
     setSuggestionFilter(filterValue);
@@ -310,6 +327,7 @@ const editedImages = gallery.filter(
   images={originalImages}
   onSelect={setSelectedImage}
   onDelete={deleteImage}
+  onRename={handleRename}   
 />
 
 <h2 style={{ marginTop: "20px" }}>🎨 Edited Images</h2>
@@ -317,6 +335,7 @@ const editedImages = gallery.filter(
   images={editedImages}
   onSelect={setSelectedImage}
   onDelete={deleteImage}
+  onRename={handleRename}   
 />
       </main>
     </div>

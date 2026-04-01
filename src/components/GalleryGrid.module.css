@@ -85,3 +85,242 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+/* 🔍 Search Bar */
+.searchBar {
+  padding: 12px 16px;
+  width: 320px;
+  margin-bottom: 25px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  background: #1e1e1e;
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: 0.3s ease;
+}
+
+.searchBar::placeholder {
+  color: #aaa;
+}
+
+.searchBar:focus {
+  box-shadow: 0 0 0 2px #ff4d4d;
+}
+
+/* 📦 Grid Layout */
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+/* 🖼 Card */
+.card {
+  background: #1a1a1a;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(255, 77, 77, 0.3);
+}
+
+/* 🖼 Image */
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.card img:hover {
+  opacity: 0.9;
+}
+
+/* 📄 Info Section */
+.info {
+  padding: 12px;
+  text-align: center;
+}
+
+.info p {
+  margin: 8px 0;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+/* 🔘 Buttons */
+.info button {
+  margin: 4px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.3s ease;
+}
+
+/* ✏️ Rename Button */
+.info button:first-of-type {
+  background: #ff4d4d;
+  color: #fff;
+}
+
+.info button:first-of-type:hover {
+  background: #ff1a1a;
+}
+
+/* ❌ Delete Button */
+.info button:last-of-type {
+  background: #333;
+  color: #fff;
+}
+
+.info button:last-of-type:hover {
+  background: #555;
+}
+
+/* ✏️ Rename Input */
+.renameInput {
+  width: 90%;
+  padding: 6px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  margin-bottom: 6px;
+  background: #2a2a2a;
+  color: #fff;
+  text-align: center;
+}
+/* 🔍 Search Bar */
+.searchBar {
+  padding: 12px 16px;
+  width: 320px;
+  margin-bottom: 25px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  background: #1e1e1e;
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: 0.3s ease;
+}
+
+.searchBar::placeholder {
+  color: #aaa;
+}
+
+.searchBar:focus {
+  box-shadow: 0 0 0 2px #D0B49F;
+}
+
+/* 📦 Grid */
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+/* 🖼 Card */
+.card {
+  background: #1a1a1a;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+/* ✨ HOVER (UPDATED COLORS) */
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 
+    0 10px 25px rgba(164, 117, 81, 0.4),   /* #A47551 glow */
+    0 0 10px rgba(208, 180, 159, 0.3);     /* #D0B49F soft glow */
+}
+
+/* 🖼 Image */
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.card img:hover {
+  opacity: 0.95;
+}
+
+/* 📄 Info */
+.info {
+  padding: 12px;
+  text-align: center;
+}
+
+.info p {
+  margin: 8px 0;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+/* 🔘 Buttons */
+.info button {
+  margin: 4px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.3s ease;
+}
+
+/* ✏️ Rename */
+.info button:first-of-type {
+  background: #D0B49F;
+  color: #000;
+}
+
+.info button:first-of-type:hover {
+  background: #A47551;
+  color: #fff;
+}
+
+/* ❌ Delete */
+.info button:last-of-type {
+  background: #333;
+  color: #fff;
+}
+
+.info button:last-of-type:hover {
+  background: #555;
+}
+
+/* ✏️ Rename Input */
+.renameInput {
+  width: 90%;
+  padding: 6px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  margin-bottom: 6px;
+  background: #2a2a2a;
+  color: #fff;
+  text-align: center;
+}
+.time {
+  display: block;
+  font-size: 12px;
+  color: #D0B49F;   
+  margin-top: 4px;
+  opacity: 0.9;
+}
