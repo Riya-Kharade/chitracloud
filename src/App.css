@@ -120,3 +120,33 @@
     grid-template-columns: 1fr;
   }
 }
+.undoRedoContainer {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.undoBtn,
+.redoBtn {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #D0B49F;
+  background: transparent;
+  color: #D0B49F;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.3s;
+}
+
+.undoBtn:hover,
+.redoBtn:hover {
+  background: #D0B49F;
+  color: #000;
+}
+
+.undoBtn:disabled,
+.redoBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

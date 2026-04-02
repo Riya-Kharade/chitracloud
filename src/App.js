@@ -89,7 +89,8 @@ function App() {
   const [flipV, setFlipV] = useState(1);
   const [resizeWidth, setResizeWidth] = useState("");
 const [resizeHeight, setResizeHeight] = useState("");
-
+const [history, setHistory] = useState([]);
+const [currentIndex, setCurrentIndex] = useState(-1);
   const uploadedFiles = useRef(new Set());
 
   // ✅ NEW: Fetch images from DB on load
@@ -169,7 +170,9 @@ const [resizeHeight, setResizeHeight] = useState("");
       });
 
       setSelectedImage(withMeta);
+      saveToHistory(withMeta);
       setGallery((prev) => [withMeta, ...prev]);
+
       setSuccessMessage("Image uploaded successfully.");
     } catch (error) {
       setSuccessMessage("Upload failed. Please try again.");
@@ -258,10 +261,64 @@ const handleResize = () => {
 
     setSelectedImage(newImage);
     setGallery((prev) => [newImage, ...prev]);
+    saveToHistory(newImage);
   };
 };
 
+//undo redo
 
+const saveToHistory = (newImage) => {
+  setHistory((prevHistory) => {
+    const updated = prevHistory.slice(0, currentIndex + 1);
+    updated.push(newImage);
+
+    setCurrentIndex(updated.length - 1);
+    return updated;
+  });
+};
+
+const handleUndo = () => {
+  if (currentIndex <= 0) return;
+
+  const newIndex = currentIndex - 1;
+  const prevState = history[newIndex];
+
+  setCurrentIndex(newIndex);
+
+  setSelectedImage(prevState.image || prevState);
+
+  setRotation(prevState.rotation || 0);
+  setFlipH(prevState.flipH || 1);
+  setFlipV(prevState.flipV || 1);
+
+  setFilterType(prevState.filterType || "normal");
+  setAdjustments(prevState.adjustments || {});
+
+  setSuggestionFilter(prevState.suggestionFilter || "");
+};
+
+const handleRedo = () => {
+  if (currentIndex >= history.length - 1) return;
+
+  const newIndex = currentIndex + 1;
+  const nextState = history[newIndex];
+
+  setCurrentIndex(newIndex);
+
+  setSelectedImage(nextState.image || nextState);
+
+  setRotation(nextState.rotation || 0);
+  setFlipH(nextState.flipH || 1);
+  setFlipV(nextState.flipV || 1);
+
+  setFilterType(nextState.filterType || "normal");
+  setAdjustments(nextState.adjustments || {});
+
+  setSuggestionFilter(nextState.suggestionFilter || "");
+};
+
+
+// delete and rename
   const deleteImage = async (id) => {
   await fetch(`http://localhost:5000/delete/${id}`, {
     method: "DELETE",
@@ -286,29 +343,72 @@ const handleRename = async (id, newName) => {
     )
   );
 };
-  const handleApplySuggestion = (effectId, filterValue) => {
-    setActiveEffect(effectId);
-    setSuggestionFilter(filterValue);
-  };
+const handleApplySuggestion = (effectId, filterValue) => {
+  setActiveEffect(effectId);
+  setSuggestionFilter(filterValue);
 
-  const handleTransform = (type) => {
-    if (type === "rotateLeft") {
-      setRotation(prev => prev - 90);
-    } 
-    else if (type === "rotateRight") {
-      setRotation(prev => prev + 90);
-    } 
-    else if (type === "flipH") {
-      setFlipH(prev => prev * -1);
-    } 
-    else if (type === "flipV") {
-      setFlipV(prev => prev * -1);
-    }
-  };
+  saveToHistory({
+    image: selectedImage,
+    filterType,
+    adjustments,
+    suggestionFilter: filterValue,
+    rotation,
+    flipH,
+    flipV
+  });
+};
 
-  const handleAdjustmentChange = (adjustmentId, value) => {
-    setAdjustments((prev) => ({ ...prev, [adjustmentId]: value }));
-  };
+  
+const handleTransform = (type) => {
+  let newRotation = rotation;
+  let newFlipH = flipH;
+  let newFlipV = flipV;
+
+  if (type === "rotateLeft") {
+    newRotation = rotation - 90;
+    setRotation(newRotation);
+  } 
+  else if (type === "rotateRight") {
+    newRotation = rotation + 90;
+    setRotation(newRotation);
+  } 
+  else if (type === "flipH") {
+    newFlipH = flipH * -1;
+    setFlipH(newFlipH);
+  } 
+  else if (type === "flipV") {
+    newFlipV = flipV * -1;
+    setFlipV(newFlipV);
+  }
+
+  // ✅ Save FULL state for undo/redo
+  saveToHistory({
+    ...selectedImage,
+    rotation: newRotation,
+    flipH: newFlipH,
+    flipV: newFlipV
+  });
+};
+const handleAdjustmentChange = (adjustmentId, value) => {
+  setAdjustments((prev) => ({
+    ...prev,
+    [adjustmentId]: value
+  }));
+};
+  const handleFilterChange = (newFilter) => {
+  setFilterType(newFilter);
+
+  saveToHistory({
+    image: selectedImage,   // ✅ important
+    filterType: newFilter,
+    adjustments,
+    rotation,
+    flipH,
+    flipV
+  });
+};
+
+
 const originalImages = gallery.filter(
   img => !img.type || img.type === "original"
 );
@@ -342,7 +442,7 @@ const editedImages = gallery.filter(
               onAdjustmentChange={handleAdjustmentChange}
               onTransform={handleTransform}
               selectedFilter={filterType}
-              onFilterChange={setFilterType}
+            onFilterChange={handleFilterChange}
               onDownload={downloadImage}
 
               resizeWidth={resizeWidth}
@@ -352,7 +452,23 @@ setResizeHeight={setResizeHeight}
 
 onResize={handleResize}
             />
+<div className="undoRedoContainer">
+  <button
+    onClick={handleUndo}
+    disabled={currentIndex <= 0}
+    className="undoBtn"
+  >
+    Undo
+  </button>
 
+  <button
+    onClick={handleRedo}
+    disabled={currentIndex >= history.length - 1}
+    className="redoBtn"
+  >
+    Redo
+  </button>
+</div>
             <div className="downloadButtonContainer">
               <button
                 className="downloadButton"
@@ -394,5 +510,7 @@ onResize={handleResize}
     </div>
   );
 }
+
+
 
 export default App;
