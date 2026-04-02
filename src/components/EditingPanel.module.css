@@ -126,3 +126,90 @@
     transform: translateY(0);
   }
 }
+/* 🔧 Resize Section */
+.resizeContainer {
+  margin-top: 15px;
+}
+
+.resizeTitle {
+  color: #D0B49F;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.resizeInputs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.resizeInput {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  background: #2a2a2a;
+  color: #fff;
+  outline: none;
+}
+
+.resizeButton {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: #D0B49F;
+  color: #000;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.resizeButton:hover {
+  background: #A47551;
+  color: #fff;
+}
+input[type="number"] {
+  width: 48%;
+  display: inline-block;
+
+  padding: 6px;
+  font-size: 13px;
+
+  border-radius: 6px;
+  border: 1px solid #D0B49F;  /* 🔥 THIS LINE ADDED */
+
+  background: #2a2a2a;
+  color: #fff;
+
+  box-sizing: border-box;
+}input[type="number"]:focus {
+  border-color: #e6c9a8;
+  box-shadow: 0 0 4px rgba(208, 180, 159, 0.6);
+}
+h4 {
+  margin: 6px 0 8px 0; /* 🔥 reduce top & bottom space */
+}
+
+input[type="number"] {
+  margin: 4px 0; /* reduce spacing */
+}
+
+button {
+  margin-top: 8px; /* less gap */
+}
+.resizeSection {
+  margin-top: 10px;
+}
+
+.resizeSection h4 {
+  margin-bottom: 6px;
+}
+
+.resizeSection input {
+  margin: 2px 0;
+}
+
+.resizeSection button {
+  margin-top: 6px;
+}
