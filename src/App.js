@@ -87,6 +87,8 @@ function App() {
   const [rotation, setRotation] = useState(0);
   const [flipH, setFlipH] = useState(1);
   const [flipV, setFlipV] = useState(1);
+  const [resizeWidth, setResizeWidth] = useState("");
+const [resizeHeight, setResizeHeight] = useState("");
 
   const uploadedFiles = useRef(new Set());
 
@@ -193,6 +195,8 @@ function App() {
     canvas.height = img.height;
 
     ctx.filter = combinedFilterStyle;
+    ctx.imageSmoothingEnabled = true;
+ctx.imageSmoothingQuality = "high";
     ctx.drawImage(img, 0, 0);
 
     // ✅ DOWNLOAD
@@ -216,6 +220,48 @@ function App() {
     });
   };
 };
+
+const handleResize = () => {
+  if (!selectedImage || !resizeWidth || !resizeHeight) return;
+
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.src = selectedImage.url;
+
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const targetWidth = parseInt(resizeWidth);
+    const targetHeight = parseInt(resizeHeight);
+
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+
+    // 🔥 IMPORTANT FIX (THIS WAS MISSING)
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+
+    // 🔥 Better scaling
+    ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+    const resizedUrl = canvas.toDataURL("image/png", 1.0); // max quality
+
+    const newImage = {
+      ...selectedImage,
+      id: Date.now(),
+      url: resizedUrl,
+      name: "resized.png",
+      type: "edited",
+      uploadedAt: new Date().toISOString(),
+    };
+
+    setSelectedImage(newImage);
+    setGallery((prev) => [newImage, ...prev]);
+  };
+};
+
+
   const deleteImage = async (id) => {
   await fetch(`http://localhost:5000/delete/${id}`, {
     method: "DELETE",
@@ -298,6 +344,13 @@ const editedImages = gallery.filter(
               selectedFilter={filterType}
               onFilterChange={setFilterType}
               onDownload={downloadImage}
+
+              resizeWidth={resizeWidth}
+setResizeWidth={setResizeWidth}
+resizeHeight={resizeHeight}
+setResizeHeight={setResizeHeight}
+
+onResize={handleResize}
             />
 
             <div className="downloadButtonContainer">
