@@ -71,10 +71,9 @@ ChitraCloud allows users to **upload, edit, and manage images** with real-time p
 
 ---
 
-### 🔵 Phase 3 (Planned – Advanced Editing & UX)
+### 🔵 Phase 3 (Completed)
 
 * Undo / Redo functionality
-* Advanced Crop Tool
 * Resize Image
 * 🔍 Search in Gallery
 * Rename Image
