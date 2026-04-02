@@ -20,7 +20,8 @@ function EditingPanel({
 setResizeWidth,
 resizeHeight,
 setResizeHeight,
-onResize   
+onResize   ,
+onCropToggle   
 }) {
   const [activeSection, setActiveSection] = useState("suggestions");
 
@@ -109,7 +110,22 @@ onResize
 >
   Apply Resize
 </button>
-
+<button
+  onClick={() => onCropToggle()}
+  style={{
+    marginTop: "10px",
+    width: "100%",
+    padding: "10px",
+    borderRadius: "10px",
+    border: "none",
+    background: "#D0B49F",
+    color: "#000",
+    cursor: "pointer",
+    fontWeight: "bold",
+  }}
+>
+  ✂️ Crop Mode
+</button>
     </div>
   </>
 )}

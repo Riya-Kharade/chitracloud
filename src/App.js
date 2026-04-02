@@ -93,6 +93,8 @@ const [history, setHistory] = useState([]);
 const [currentIndex, setCurrentIndex] = useState(-1);
   const uploadedFiles = useRef(new Set());
 
+
+  
   // ✅ NEW: Fetch images from DB on load
   useEffect(() => {
     fetch("http://localhost:5000/images")
