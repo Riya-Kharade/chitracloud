@@ -1,52 +1,225 @@
+/* HEADER CONTAINER */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  padding: 16px 6%;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background 0.3s ease, color 0.3s ease, border 0.3s ease;
 }
 
+/* ================= DARK MODE ================= */
+
+.themeDark .header {
+  background: #0b0b0b; /* solid black */
+}
+
+/* LEFT LOGO */
+.logoSection {
+  display: flex;
+  flex-direction: column;
+}
+
+/* LOGO */
 .title {
-  margin: 0;
-  font-family: "Sora", sans-serif;
-  font-size: clamp(1.6rem, 2.2vw, 2.3rem);
-  letter-spacing: 0.02em;
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ffffff, #c89b6d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
-  margin: 0.3rem 0 0;
-  color: var(--text-muted);
-  font-size: 0.95rem;
+  font-size: 12px;
+  color: #888;
 }
 
-.themeButton {
-  border: 0;
-  border-radius: 999px;
-  padding: 0.65rem 1rem;
-  display: inline-flex;
+/* NAV LINKS */
+.navLinks {
+  display: flex;
+  gap: 30px;
   align-items: center;
-  gap: 0.45rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--text-primary);
-  background: var(--card-elevated);
-  box-shadow: var(--shadow-soft);
+}
+
+/* DEFAULT LINK */
+.navLink {
+  position: relative;
+  color: #9a9a9a;
+  font-size: 15px;
+  font-weight: 500;
   cursor: pointer;
-  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  transition: all 0.3s ease;
+}
+
+/* HOVER */
+.navLink:hover {
+  color: #c89b6d;
+}
+
+/* UNDERLINE */
+.navLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0%;
+  height: 2px;
+  background: #c89b6d;
+  transition: width 0.3s ease;
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+/* ACTIVE */
+.active {
+  color: #c89b6d;
+  font-weight: 600;
+}
+
+.active::after {
+  width: 100%;
+}
+
+/* ACTIONS */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* LOGIN BUTTON */
+.loginBtn {
+  background: #c89b6d;
+  color: black;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.loginBtn:hover {
+  background: #e0b586;
+  transform: translateY(-2px);
+}
+
+/* THEME BUTTON (DARK DEFAULT) */
+.themeButton {
+  border-radius: 50%;
+  padding: 8px;
+  border: 1px solid #c89b6d;
+  background: #111;
+  color: #c89b6d;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 .themeButton:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-strong);
+  transform: rotate(20deg);
 }
 
+/* ICON */
 .themeIcon {
-  font-size: 0.73rem;
-  opacity: 0.8;
+  font-size: 16px;
 }
 
-@media (max-width: 680px) {
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
+/* ================= LIGHT MODE ================= */
+
+
+.themeLight .header {
+  background: #ffffff; /* solid white */
+  border-bottom: 1px solid #e5e7eb;
+}
+/* LOGO */
+
+/* NAV LINKS */
+.themeLight .navLink {
+  color: #555;
+}
+
+.themeLight .navLink:hover {
+  color: #c89b6d;
+}
+
+/* ACTIVE */
+.themeLight .active {
+  color: #c89b6d;
+}
+
+/* THEME BUTTON */
+.themeLight .themeButton {
+  background: #f3f4f6;
+  color: #c89b6d;
+  border: 1px solid #ddd;
+}
+
+.themeLight .themeButton:hover {
+  background: #e5e7eb;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .navLinks {
+    display: none;
   }
+}
+.navLink {
+  transition: color 0.3s ease;
+}
+/* FIX TEXT IN LIGHT MODE */
+
+.themeLight .navLink {
+  color: #444;   /* darker text */
+}
+
+.themeLight .navLink:hover {
+  color: #c89b6d;
+}
+.themeLight .header {
+  background: #ffffff;
+  border-bottom: 1px solid #ddd;
+}
+.themeLight .active {
+  color: #c89b6d;
+}.themeLight .loginBtn {
+  background: #c89b6d;
+  color: #000;   /* IMPORTANT */
+}
+
+/* FORCE LOGO DARK IN LIGHT MODE */
+.themeLight .themeButton {
+  background: #ffffff;
+  border: 1px solid #c89b6d;
+}
+
+.themeLight .themeIcon {
+  color: #c89b6d;   /* golden icon */
+}.themeLight .themeButton {
+  background: #f9fafb;
+}
+
+:global(.themeLight) .title {
+  background: linear-gradient(90deg, #111111, #c89b6d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+}
+/* LIGHT MODE ICON FIX */
+:global(.themeLight) .themeIcon {
+  color: #c89b6d;          /* golden icon */
+  font-size: 16px;
+}
+:global(.themeLight) .themeButton {
+  background: #ffffff;
+  border: 1px solid #c89b6d;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+:global(.themeLight) .themeButton:hover {
+  background: #f3f4f6;
+  transform: scale(1.05);
 }

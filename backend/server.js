@@ -43,7 +43,9 @@ app.post("/upload", upload.single("image"), async (req, res) => {
     };
 
     const uploadResult = await s3.upload(params).promise();
-const type = req.body.type || "original";
+    const userId = req.body.userId;
+    const type = req.body.type || "original";
+    console.log("Uploading for user:", userId);
     const imageId = uuidv4();
 
     await docClient.send(
@@ -51,6 +53,7 @@ const type = req.body.type || "original";
         TableName: "ChitraCloudImages",
         Item: {
           id: imageId,
+          userId: userId,
           url: uploadResult.Location,
           name: req.file.originalname,
           size: req.file.size,
@@ -73,15 +76,24 @@ const type = req.body.type || "original";
 });
 
 // ================= GET =================
+
+// ================= GET =================
 app.get("/images", async (req, res) => {
   try {
+    const userId = req.query.userId;
+
+    console.log("Fetching images for user:", userId);
+
     const data = await docClient.send(
       new ScanCommand({
         TableName: "ChitraCloudImages",
       })
     );
 
-    res.json(data.Items || []);
+   const filtered = (data.Items || []).filter(
+  (img) => img.userId && img.userId === userId
+);
+    res.json(filtered);
   } catch (err) {
     console.error("FETCH ERROR:", err);
     res.status(500).json({ error: "Failed to fetch images" });
@@ -125,6 +137,33 @@ app.delete("/delete/:id", async (req, res) => {
   } catch (err) {
     console.error("DELETE ERROR:", err);
     res.status(500).json({ error: "Delete failed" });
+  }
+});
+
+
+app.post("/contact", async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+
+    console.log("Contact Data:", name, email, message);
+
+    await docClient.send(
+      new PutCommand({
+        TableName: "ChitraCloudContacts",
+        Item: {
+          id: Date.now().toString(),
+          name,
+          email,
+          message,
+          createdAt: new Date().toISOString(),
+        },
+      })
+    );
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("CONTACT ERROR:", error);
+    res.status(500).json({ success: false });
   }
 });
 

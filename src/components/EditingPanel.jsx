@@ -39,7 +39,7 @@ function EditingPanel({
                 activeSection === section.id ? null : section.id
               )
             }
-            disabled={!isImageLoaded}
+            disabled={false}
           >
             <span className={styles.sectionTitle}>{section.label}</span>
             <span
@@ -51,7 +51,7 @@ function EditingPanel({
             </span>
           </button>
 
-          {activeSection === section.id && (
+         {(activeSection === section.id || !isImageLoaded) && (
             <div className={styles.sectionContent}>
               {section.id === "suggestions" && (
                 <SuggestionsPanel

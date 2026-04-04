@@ -120,3 +120,28 @@
     grid-template-columns: 1fr;
   }
 }
+.themeDark {
+  background-color: #0b0b0b;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.themeLight {
+  background-color: #f3f4f6;
+  color: #111;
+  transition: all 0.3s ease;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.themeLight {
+  background: #f5f6f8;  /* same as your page */
+  min-height: 100vh;
+}
+
+.themeDark {
+  background: #0b0b0b;
+  min-height: 100vh;
+}
