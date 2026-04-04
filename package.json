@@ -10,6 +10,7 @@
     "amazon-cognito-identity-js": "^6.3.16",
     "aws-sdk": "^2.1693.0",
     "lucide-react": "^1.7.0",
+    "dayjs": "^1.11.20",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-easy-crop": "^5.5.7",

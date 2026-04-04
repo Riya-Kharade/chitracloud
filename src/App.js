@@ -98,6 +98,9 @@ function App() {
   const [resizeHeight, setResizeHeight] = useState("");
   const [history, setHistory] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
+const [resizeHeight, setResizeHeight] = useState("");
+const [history, setHistory] = useState([]);
+const [currentIndex, setCurrentIndex] = useState(-1);
   const uploadedFiles = useRef(new Set());
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const userId = localStorage.getItem("userId");
@@ -120,6 +123,13 @@ function App() {
             })
           )
         );
+  data.map((img) =>
+    resolveImageMeta({
+      ...img,
+      type: img.type || "original", // ⭐ IMPORTANT FIX
+    })
+  )
+);
         setGallery(imagesWithMeta);
       })
       .catch((err) => console.error("Fetch error:", err));
@@ -219,6 +229,10 @@ function App() {
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
       ctx.drawImage(img, 0, 0);
+    ctx.filter = combinedFilterStyle;
+    ctx.imageSmoothingEnabled = true;
+ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(img, 0, 0);
 
       // ✅ DOWNLOAD
       const link = document.createElement("a");
@@ -340,6 +354,103 @@ function App() {
 
 
   // delete and rename
+};
+
+const handleResize = () => {
+  if (!selectedImage || !resizeWidth || !resizeHeight) return;
+
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.src = selectedImage.url;
+
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const targetWidth = parseInt(resizeWidth);
+    const targetHeight = parseInt(resizeHeight);
+
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+
+    // 🔥 IMPORTANT FIX (THIS WAS MISSING)
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+
+    // 🔥 Better scaling
+    ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+    const resizedUrl = canvas.toDataURL("image/png", 1.0); // max quality
+
+    const newImage = {
+      ...selectedImage,
+      id: Date.now(),
+      url: resizedUrl,
+      name: "resized.png",
+      type: "edited",
+      uploadedAt: new Date().toISOString(),
+    };
+
+    setSelectedImage(newImage);
+    setGallery((prev) => [newImage, ...prev]);
+    saveToHistory(newImage);
+  };
+};
+
+//undo redo
+
+const saveToHistory = (newImage) => {
+  setHistory((prevHistory) => {
+    const updated = prevHistory.slice(0, currentIndex + 1);
+    updated.push(newImage);
+
+    setCurrentIndex(updated.length - 1);
+    return updated;
+  });
+};
+
+const handleUndo = () => {
+  if (currentIndex <= 0) return;
+
+  const newIndex = currentIndex - 1;
+  const prevState = history[newIndex];
+
+  setCurrentIndex(newIndex);
+
+  setSelectedImage(prevState.image || prevState);
+
+  setRotation(prevState.rotation || 0);
+  setFlipH(prevState.flipH || 1);
+  setFlipV(prevState.flipV || 1);
+
+  setFilterType(prevState.filterType || "normal");
+  setAdjustments(prevState.adjustments || {});
+
+  setSuggestionFilter(prevState.suggestionFilter || "");
+};
+
+const handleRedo = () => {
+  if (currentIndex >= history.length - 1) return;
+
+  const newIndex = currentIndex + 1;
+  const nextState = history[newIndex];
+
+  setCurrentIndex(newIndex);
+
+  setSelectedImage(nextState.image || nextState);
+
+  setRotation(nextState.rotation || 0);
+  setFlipH(nextState.flipH || 1);
+  setFlipV(nextState.flipV || 1);
+
+  setFilterType(nextState.filterType || "normal");
+  setAdjustments(nextState.adjustments || {});
+
+  setSuggestionFilter(nextState.suggestionFilter || "");
+};
+
+
+// delete and rename
   const deleteImage = async (id) => {
     await fetch(`http://localhost:5000/delete/${id}`, {
       method: "DELETE",
@@ -437,7 +548,98 @@ function App() {
   const editedImages = gallery.filter(
     img => img.type === "edited"
   );
+  setGallery((prev) => prev.filter((img) => img.id !== id));
+};
+const handleRename = async (id, newName) => {
+  // ✅ Update in backend (API)
+  await fetch(`http://localhost:5000/rename/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name: newName }),
+  });
 
+  // ✅ Update frontend state
+  setGallery((prev) =>
+    prev.map((img) =>
+      img.id === id ? { ...img, name: newName } : img
+    )
+  );
+};
+const handleApplySuggestion = (effectId, filterValue) => {
+  setActiveEffect(effectId);
+  setSuggestionFilter(filterValue);
+
+  saveToHistory({
+    image: selectedImage,
+    filterType,
+    adjustments,
+    suggestionFilter: filterValue,
+    rotation,
+    flipH,
+    flipV
+  });
+};
+
+  
+const handleTransform = (type) => {
+  let newRotation = rotation;
+  let newFlipH = flipH;
+  let newFlipV = flipV;
+
+  if (type === "rotateLeft") {
+    newRotation = rotation - 90;
+    setRotation(newRotation);
+  } 
+  else if (type === "rotateRight") {
+    newRotation = rotation + 90;
+    setRotation(newRotation);
+  } 
+  else if (type === "flipH") {
+    newFlipH = flipH * -1;
+    setFlipH(newFlipH);
+  } 
+  else if (type === "flipV") {
+    newFlipV = flipV * -1;
+    setFlipV(newFlipV);
+  }
+
+  // ✅ Save FULL state for undo/redo
+  saveToHistory({
+    ...selectedImage,
+    rotation: newRotation,
+    flipH: newFlipH,
+    flipV: newFlipV
+  });
+};
+const handleAdjustmentChange = (adjustmentId, value) => {
+  setAdjustments((prev) => ({
+    ...prev,
+    [adjustmentId]: value
+  }));
+};
+  const handleFilterChange = (newFilter) => {
+  setFilterType(newFilter);
+
+  saveToHistory({
+    image: selectedImage,   // ✅ important
+    filterType: newFilter,
+    adjustments,
+    rotation,
+    flipH,
+    flipV
+  });
+};
+
+
+const originalImages = gallery.filter(
+  img => !img.type || img.type === "original"
+);
+
+const editedImages = gallery.filter(
+  img => img.type === "edited"
+);
   return (
     <BrowserRouter>
 
@@ -596,6 +798,91 @@ function App() {
       </div>
     </BrowserRouter>
 
+
+        <section className="contentGrid">
+          <aside className="leftPane">
+            <UploadCard
+              onUpload={handleUpload}
+              uploading={uploading}
+              selectedName={selectedImage?.name}
+              successMessage={successMessage}
+            />
+
+            <EditingPanel
+              darkMode={darkMode}
+              isImageLoaded={!!selectedImage}
+              activeEffect={activeEffect}
+              adjustments={adjustments}
+              onApplySuggestion={handleApplySuggestion}
+              onAdjustmentChange={handleAdjustmentChange}
+              onTransform={handleTransform}
+              selectedFilter={filterType}
+            onFilterChange={handleFilterChange}
+              onDownload={downloadImage}
+
+              resizeWidth={resizeWidth}
+setResizeWidth={setResizeWidth}
+resizeHeight={resizeHeight}
+setResizeHeight={setResizeHeight}
+
+onResize={handleResize}
+            />
+<div className="undoRedoContainer">
+  <button
+    onClick={handleUndo}
+    disabled={currentIndex <= 0}
+    className="undoBtn"
+  >
+    Undo
+  </button>
+
+  <button
+    onClick={handleRedo}
+    disabled={currentIndex >= history.length - 1}
+    className="redoBtn"
+  >
+    Redo
+  </button>
+</div>
+            <div className="downloadButtonContainer">
+              <button
+                className="downloadButton"
+                onClick={downloadImage}
+                disabled={!selectedImage}
+              >
+                ⬇ Download Image
+              </button>
+            </div>
+          </aside>
+
+          <section className="rightPane">
+            <ImagePreview 
+              image={selectedImage} 
+              filterStyle={combinedFilterStyle}
+              rotation={rotation}
+              flipH={flipH}
+              flipV={flipV}
+            />
+          </section>
+        </section>
+
+       <h2 style={{ marginTop: "20px" }}>📸 Original Images</h2>
+<GalleryGrid
+  images={originalImages}
+  onSelect={setSelectedImage}
+  onDelete={deleteImage}
+  onRename={handleRename}   
+/>
+
+<h2 style={{ marginTop: "20px" }}>🎨 Edited Images</h2>
+<GalleryGrid
+  images={editedImages}
+  onSelect={setSelectedImage}
+  onDelete={deleteImage}
+  onRename={handleRename}   
+/>
+      </main>
+    </div>
   );
 }
 
