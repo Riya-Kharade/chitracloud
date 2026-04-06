@@ -140,6 +140,32 @@ app.delete("/delete/:id", async (req, res) => {
   }
 });
 
+
+app.post("/contact", async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+
+    console.log("Contact Data:", name, email, message);
+
+    await docClient.send(
+      new PutCommand({
+        TableName: "ChitraCloudContacts",
+        Item: {
+          id: Date.now().toString(),
+          name,
+          email,
+          message,
+          createdAt: new Date().toISOString(),
+        },
+      })
+    );
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("CONTACT ERROR:", error);
+    res.status(500).json({ success: false });
+  }
+});
 // ================= RENAME =================
 app.put("/rename/:id", async (req, res) => {
   try {
@@ -177,33 +203,6 @@ app.put("/rename/:id", async (req, res) => {
     res.status(500).json({ error: "Rename failed" });
   }
 });
-
-app.post("/contact", async (req, res) => {
-  try {
-    const { name, email, message } = req.body;
-
-    console.log("Contact Data:", name, email, message);
-
-    await docClient.send(
-      new PutCommand({
-        TableName: "ChitraCloudContacts",
-        Item: {
-          id: Date.now().toString(),
-          name,
-          email,
-          message,
-          createdAt: new Date().toISOString(),
-        },
-      })
-    );
-
-    res.json({ success: true });
-  } catch (error) {
-    console.error("CONTACT ERROR:", error);
-    res.status(500).json({ success: false });
-  }
-});
-
 
 app.listen(5000, () => {
   console.log("🚀 Server running on port 5000");

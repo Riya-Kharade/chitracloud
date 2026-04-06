@@ -71,7 +71,7 @@
 }
 
 [data-theme="dark"] .sectionHeader:hover {
-  background: #1f1f1f;
+  background: #c89b6d;
 }
 
 [data-theme="dark"] .active {
@@ -129,7 +129,6 @@
   flex: 1;
   display: flex;
   justify-content: center;
-<<<<<<< HEAD
   width: 24px;
   height: 24px;
   font-size: 1.5rem;
@@ -259,6 +258,4 @@ button {
 
 .resizeSection button {
   margin-top: 6px;
-=======
->>>>>>> 59434b0 (Rename,Search,delete as well as Login issue resolved)
 }

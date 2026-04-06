@@ -1,95 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Header.module.css";
 
-function Header({ 
-  darkMode, 
-  onToggleTheme, 
-  setCurrentPage, 
-  currentPage,   // ✅ ADD THIS
-  isAuthenticated, 
-  onLogout 
-}) {
+function Header({ darkMode, onToggleTheme, setCurrentPage, currentPage, isAuthenticated, onLogout }) {
+
+  const [menuOpen, setMenuOpen] = useState(false); // ✅ ADD
+
   return (
     <header className={styles.header}>
-      
-      {/* LEFT SIDE */}
+
+      {/* LEFT */}
       <div
         className={styles.logoSection}
         onClick={() => setCurrentPage("home")}
-        style={{ cursor: "pointer" }}
       >
         <h1 className={styles.title}>ChitraCloud</h1>
       </div>
 
-      {/* CENTER NAV */}
-      <nav className={styles.navLinks}>
+      {/* HAMBURGER (mobile only) */}
+      <div
+        className={styles.hamburger}
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        ☰
+      </div>
+
+      {/* NAV */}
+      <nav className={`${styles.navLinks} ${menuOpen ? styles.showMenu : ""}`}>
         
-        <span
-          className={`${styles.navLink} ${currentPage === "home" ? styles.active : ""}`}
-          onClick={() => setCurrentPage("home")}
-        >
-          Home
-        </span>
-
-        <span
-          className={`${styles.navLink} ${currentPage === "about" ? styles.active : ""}`}
-          onClick={() => setCurrentPage("about")}
-        >
-          About
-        </span>
-
-        <span
-          className={`${styles.navLink} ${currentPage === "editor" ? styles.active : ""}`}
-          onClick={() => setCurrentPage("editor")}
-        >
-          Editor
-        </span>
-
-        <span
-          className={`${styles.navLink} ${currentPage === "conversion" ? styles.active : ""}`}
-          onClick={() => setCurrentPage("conversion")}
-        >
-          Conversion
-        </span>
-
-        <span
-          className={`${styles.navLink} ${currentPage === "contact" ? styles.active : ""}`}
-          onClick={() => setCurrentPage("contact")}
-        >
-          Contact
-        </span>
+        <span className={styles.navLink} onClick={() => setCurrentPage("home")}>Home</span>
+        <span className={styles.navLink} onClick={() => setCurrentPage("about")}>About</span>
+        <span className={styles.navLink} onClick={() => setCurrentPage("editor")}>Editor</span>
+        <span className={styles.navLink} onClick={() => setCurrentPage("conversion")}>Conversion</span>
+        <span className={styles.navLink} onClick={() => setCurrentPage("contact")}>Contact</span>
 
       </nav>
 
-      {/* RIGHT SIDE */}
+      {/* RIGHT */}
       <div className={styles.actions}>
-        
         {!isAuthenticated ? (
-          <button
-            className={styles.loginBtn}
-            onClick={() => setCurrentPage("auth")}
-          >
-            Login / Signup
+          <button className={styles.loginBtn} onClick={() => setCurrentPage("auth")}>
+            Login/Register
           </button>
         ) : (
-          <button
-            className={styles.loginBtn}
-            onClick={onLogout}
-          >
+          <button className={styles.loginBtn} onClick={onLogout}>
             Logout
           </button>
         )}
 
-        <button
-          className={styles.themeButton}
-          type="button"
-          onClick={onToggleTheme}
-        >
-          <span className={styles.themeIcon}>
-            {darkMode ? "🌞" : "🌙"}
-          </span>
+        <button className={styles.themeButton} onClick={onToggleTheme}>
+          {darkMode ? "🌞" : "🌙"}
         </button>
-
       </div>
     </header>
   );

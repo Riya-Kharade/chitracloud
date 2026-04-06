@@ -223,3 +223,48 @@
   background: #f3f4f6;
   transform: scale(1.05);
 }
+/* ================= MOBILE ================= */
+
+.hamburger {
+  display: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* 📱 Mobile */
+@media (max-width: 900px) {
+
+  .hamburger {
+    display: block;
+  }
+
+  .navLinks {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background: #111;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0;
+    display: none;
+  }
+
+  .showMenu {
+    display: flex;  /* 🔥 show menu */
+  }
+
+  .navLink {
+    font-size: 16px;
+  }
+
+  .actions {
+    gap: 10px;
+  }
+}
+
+/* 🌞 Light mode mobile fix */
+:global(.themeLight) .navLinks {
+  background: #ffffff;
+}

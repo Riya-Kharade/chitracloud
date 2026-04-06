@@ -687,3 +687,174 @@ section {
 .themeLight .copy a:hover {
   color: #c89b6d;
 }
+/* ================= RESPONSIVE ================= */
+
+/* 📱 Tablet */
+@media (max-width: 1024px) {
+
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .heroImage {
+    margin-top: 20px;
+  }
+
+  .heroImg {
+    width: 90%;
+  }
+
+  .featureGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .previewGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .steps {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .footerContent {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+/* 📱 Mobile */
+@media (max-width: 768px) {
+
+  .hero h1 {
+    font-size: 24px;
+  }
+
+  .hero p {
+    font-size: 14px;
+  }
+
+  .heroButtons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .primaryBtn,
+  .secondaryBtn,
+  .primaryBtnn {
+    width: 100%;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .previewGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .footerContent {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .footerCol ul {
+    padding: 0;
+  }
+
+  .footerCol li {
+    justify-content: center;
+  }
+}
+
+/* 📱 Small Mobile */
+@media (max-width: 480px) {
+
+  .hero {
+    padding: 20px 10px;
+  }
+
+  .hero h1 {
+    font-size: 20px;
+  }
+
+  .heroImg {
+    width: 100%;
+  }
+
+  .featureCard,
+  .previewCard {
+    padding: 10px;
+  }
+
+  .cta h2 {
+    font-size: 18px;
+  }
+
+  .cta p {
+    font-size: 13px;
+  }
+
+  .copy {
+    font-size: 12px;
+  }
+}/* ================= FOOTER RESPONSIVE ================= */
+
+/* 💻 Default (already 3 columns) */
+
+/* 📱 Tablet */
+@media (max-width: 1024px) {
+  .footerContent {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+/* 📱 Mobile */
+@media (max-width: 768px) {
+  .footerContent {
+    grid-template-columns: 1fr;  /* 🔥 stack all */
+    text-align: center;
+  }
+
+  .footerCol {
+    margin-bottom: 15px;
+  }
+
+  .footerCol ul {
+    padding: 0;
+  }
+
+  .footerCol li {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .footerCol p {
+    justify-content: center;
+  }
+}
+
+/* 📱 Small Mobile */
+@media (max-width: 480px) {
+  .footer {
+    padding: 20px 10px;
+  }
+
+  .footerCol h3,
+  .footerCol h4 {
+    font-size: 16px;
+  }
+
+  .footerCol p,
+  .footerCol li {
+    font-size: 13px;
+  }
+
+  .copy {
+    font-size: 12px;
+    text-align: center;
+  }
+}

@@ -181,3 +181,49 @@
 .brand {
   color: #c89b6d;
 }
+
+/* ================= RESPONSIVE ================= */
+
+/* 📱 Tablet */
+@media (max-width: 768px) {
+
+  .authHeader h1 {
+    font-size: 26px;
+  }
+
+  .authCard {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .authTab {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+/* 📱 Mobile */
+@media (max-width: 480px) {
+
+  .authContainer {
+    padding: 15px;
+  }
+
+  .authHeader h1 {
+    font-size: 22px;
+  }
+
+  .authHeader p {
+    font-size: 13px;
+  }
+
+  .authCard {
+    width: 100%;
+    padding: 18px;
+  }
+
+  .authTab {
+    font-size: 13px;
+    padding: 8px;
+  }
+}

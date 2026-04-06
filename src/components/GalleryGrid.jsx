@@ -1,9 +1,27 @@
+
 import React, { useState } from "react";
 import styles from "./GalleryGrid.module.css";
 
 function GalleryGrid({ images, onSelect, onDelete, onRename }) {
   const [renameId, setRenameId] = useState(null);
   const [newName, setNewName] = useState("");
+function getRelativeTime(dateString) {
+  const now = new Date();
+  const past = new Date(dateString);
+  const diff = Math.floor((now - past) / 1000); // seconds
+
+  if (diff < 60) return "a few seconds ago";
+
+  const minutes = Math.floor(diff / 60);
+  if (minutes < 60) return `${minutes} min${minutes > 1 ? "s" : ""} ago`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+
+  const days = Math.floor(hours / 24);
+  return `${days} day${days > 1 ? "s" : ""} ago`;
+}
+  
 
   return (
     <div className={styles.galleryWrapper}>
@@ -24,6 +42,9 @@ function GalleryGrid({ images, onSelect, onDelete, onRename }) {
               {/* Image Name */}
               <p className={styles.imageName}>{img.name}</p>
 
+<p className={styles.time}>
+  ⏱ {getRelativeTime(img.uploadedAt)}
+</p>
               {/* Buttons */}
               <div className={styles.imageActions}>
                 
@@ -100,3 +121,4 @@ function GalleryGrid({ images, onSelect, onDelete, onRename }) {
 }
 
 export default GalleryGrid;
+

@@ -181,28 +181,32 @@ function Home({ setCurrentPage, isAuthenticated }) {
     </div>
 
     {/* Column 2 */}
-    <div className="footerCol">
+    {/* Column 2 */}
+<div className="footerCol">
   <h4>Important Pages</h4>
+
   <ul>
 
-  <li onClick={() => setCurrentPage("home")}>
-  <FaHome />
-  <span>Home</span>
-</li>
-
-   <li onClick={() => setCurrentPage("about")}>
-  <FaInfoCircle />
-  <span>About</span>
-</li>
-
-    <li>
-      <FaEdit />
-      <Link to="/auth">Editor</Link> {/* first goes to auth */}
+    <li onClick={() => setCurrentPage("home")}>
+      <FaHome />
+      <span>Home</span>
     </li>
 
-    <li>
+    <li onClick={() => setCurrentPage("about")}>
+      <FaInfoCircle />
+      <span>About</span>
+    </li>
+
+    {/* ✅ Editor → goes to auth first */}
+    <li onClick={() => setCurrentPage("auth")}>
+      <FaEdit />
+      <span>Editor</span>
+    </li>
+
+    {/* ✅ Contact */}
+    <li onClick={() => setCurrentPage("contact")}>
       <FaEnvelope />
-      <Link to="/contact">Contact</Link>
+      <span>Contact</span>
     </li>
 
   </ul>
