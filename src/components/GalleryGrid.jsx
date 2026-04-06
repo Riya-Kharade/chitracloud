@@ -1,95 +1,100 @@
 import React, { useState } from "react";
 import styles from "./GalleryGrid.module.css";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 
-dayjs.extend(relativeTime);
 function GalleryGrid({ images, onSelect, onDelete, onRename }) {
-  const [search, setSearch] = useState("");
-  const [editingId, setEditingId] = useState(null);
+  const [renameId, setRenameId] = useState(null);
   const [newName, setNewName] = useState("");
-
-  // 🔍 Search Filter
-  const filteredImages = images.filter((img) =>
-    img.name.toLowerCase().includes(search.toLowerCase())
-  );
-
-  // ✏️ Rename Handler
-  const handleRename = (id) => {
-    if (newName.trim() !== "") {
-      onRename(id, newName);
-      setEditingId(null);
-      setNewName("");
-    }
-  };
 
   return (
     <div className={styles.galleryWrapper}>
-      
-      {/* 🔍 Search Bar */}
-      <input
-        type="text"
-        placeholder="Search images..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className={styles.searchBar}
-      />
+      <h2>Gallery</h2>
 
       <div className={styles.galleryGrid}>
-        {filteredImages.length > 0 ? (
-          filteredImages.map((img) => (
+        {images.length > 0 ? (
+          images.map((img) => (
             <div key={img.id} className={styles.card}>
               
+              {/* Image */}
               <img
                 src={img.url}
                 alt={img.name}
                 onClick={() => onSelect(img)}
               />
 
-              <div className={styles.info}>
+              {/* Image Name */}
+              <p className={styles.imageName}>{img.name}</p>
+
+              {/* Buttons */}
+              <div className={styles.imageActions}>
                 
-                {/* ✏️ Rename UI */}
-                {editingId === img.id ? (
-                  <>
-                    <input
-                      type="text"
-                      value={newName}
-                      onChange={(e) => setNewName(e.target.value)}
-                      className={styles.renameInput}
-                    />
-                    <button onClick={() => handleRename(img.id)}>Save</button>
-                    <button onClick={() => setEditingId(null)}>Cancel</button>
-                  </>
-                ) : (
-                  <>
-                   <p>{img.name}</p>
-<small className={styles.time}>
-  {img.uploadedAt
-    ? dayjs(img.uploadedAt).fromNow()
-    : "Just now"}
-</small>
+                {/* Rename */}
+                <button
+                  className={styles.renameBtn}
+                  onClick={() => {
+                    setRenameId(img.id);
+                    setNewName(img.name);
+                  }}
+                >
+                  Rename
+                </button>
 
-                    <button
-                      onClick={() => {
-                        setEditingId(img.id);
-                        setNewName(img.name);
-                      }}
-                    >
-                      Rename
-                    </button>
+                {/* Delete */}
+                <button
+                  className={styles.deleteBtn}
+                  onClick={() => onDelete(img.id)}
+                >
+                  Delete
+                </button>
 
-                    <button onClick={() => onDelete(img.id)}>
-                      Delete
-                    </button>
-                  </>
-                )}
               </div>
             </div>
           ))
         ) : (
-          <p>No images found</p>
+          <p className={styles.noImages}>No images found</p>
         )}
       </div>
+
+      {/* ✅ RENAME MODAL */}
+      {renameId && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            
+            <h3>Rename Image</h3>
+
+            <input
+              type="text"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              className={styles.input}
+            />
+
+            <div className={styles.modalActions}>
+              
+              <button
+                className={styles.saveBtn}
+                onClick={() => {
+                  onRename(renameId, newName);
+                  setRenameId(null);
+                  setNewName("");
+                }}
+              >
+                Save
+              </button>
+
+              <button
+                className={styles.cancelBtn}
+                onClick={() => {
+                  setRenameId(null);
+                  setNewName("");
+                }}
+              >
+                Cancel
+              </button>
+
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -64,3 +64,16 @@
     grid-template-columns: 1fr;
   }
 }
+.previewCard {
+  width: 100%;
+  max-width: 900px;     /* 🔥 BIGGER PREVIEW */
+  background: #151515;
+  border-radius: 22px;
+  padding: 22px;
+  border: 1px solid #222;
+}
+
+.previewImage {
+  width: 100%;
+  border-radius: 16px;
+}

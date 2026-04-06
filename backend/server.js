@@ -10,7 +10,6 @@ const {
   PutCommand,
   ScanCommand,
   DeleteCommand,
-  UpdateCommand   
 } = require("@aws-sdk/lib-dynamodb");
 
 const { v4: uuidv4 } = require("uuid");
@@ -125,6 +124,7 @@ app.delete("/delete/:id", async (req, res) => {
       Key: key,
     }).promise();
 
+    // ✅ FIXED LINE
     await docClient.send(
       new DeleteCommand({
         TableName: "ChitraCloudImages",
@@ -140,28 +140,32 @@ app.delete("/delete/:id", async (req, res) => {
   }
 });
 
-//rename
+// ================= RENAME =================
 app.put("/rename/:id", async (req, res) => {
   try {
-    const { id } = req.params;
+    const imageId = req.params.id;
     const { name } = req.body;
 
-    console.log("Rename API called:", id, name); // 🔥 DEBUG
+    console.log("Rename request:", imageId, name);
 
-    if (!name) {
-      return res.status(400).json({ error: "Name is required" });
+    const data = await docClient.send(
+      new ScanCommand({
+        TableName: "ChitraCloudImages",
+      })
+    );
+
+    const item = data.Items.find((img) => img.id === imageId);
+
+    if (!item) {
+      return res.status(404).json({ error: "Image not found" });
     }
 
     await docClient.send(
-      new UpdateCommand({
+      new PutCommand({
         TableName: "ChitraCloudImages",
-        Key: { id: id },
-        UpdateExpression: "set #n = :name",
-        ExpressionAttributeNames: {
-          "#n": "name",
-        },
-        ExpressionAttributeValues: {
-          ":name": name,
+        Item: {
+          ...item,
+          name: name,
         },
       })
     );

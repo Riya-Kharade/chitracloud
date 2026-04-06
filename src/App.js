@@ -105,6 +105,7 @@ const [currentIndex, setCurrentIndex] = useState(-1);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const userId = localStorage.getItem("userId");
   const [currentPage, setCurrentPage] = useState("home");
+  const [searchQuery, setSearchQuery] = useState("");
 
   console.log("Current user:", userId);
 
@@ -459,8 +460,10 @@ const handleRedo = () => {
     setGallery((prev) => prev.filter((img) => img.id !== id));
   };
   const handleRename = async (id, newName) => {
-    // ✅ Update in backend (API)
-    await fetch(`http://localhost:5000/rename/${id}`, {
+  try {
+    console.log("Sending rename:", id, newName);
+
+    const res = await fetch(`http://localhost:5000/rename/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -468,13 +471,24 @@ const handleRedo = () => {
       body: JSON.stringify({ name: newName }),
     });
 
-    // ✅ Update frontend state
+    const data = await res.json();
+    console.log("Response:", data);
+
+    if (!res.ok) {
+      throw new Error("Rename failed");
+    }
+
     setGallery((prev) =>
       prev.map((img) =>
         img.id === id ? { ...img, name: newName } : img
       )
     );
-  };
+
+  } catch (err) {
+    console.error(err);
+    alert("Rename failed ❌");
+  }
+};
   const handleApplySuggestion = (effectId, filterValue) => {
     setActiveEffect(effectId);
     setSuggestionFilter(filterValue);
@@ -541,9 +555,11 @@ const handleRedo = () => {
   };
 
 
-  const originalImages = gallery.filter(
-    img => !img.type || img.type === "original"
-  );
+ const originalImages = gallery.filter(
+  (img) =>
+    (!img.type || img.type === "original") &&
+    img.name.toLowerCase().includes(searchQuery.toLowerCase())
+);
 
   const editedImages = gallery.filter(
     img => img.type === "edited"
@@ -559,6 +575,11 @@ const handleRename = async (id, newName) => {
     },
     body: JSON.stringify({ name: newName }),
   });
+const editedImages = gallery.filter(
+  (img) =>
+    img.type === "edited" &&
+    img.name.toLowerCase().includes(searchQuery.toLowerCase())
+);
 
   // ✅ Update frontend state
   setGallery((prev) =>
@@ -767,7 +788,21 @@ const editedImages = gallery.filter(
                   />
                 </section>
               </section>
-
+<div style={{ margin: "20px 0" }}>
+  <input
+    type="text"
+    placeholder="Search images..."
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+    style={{
+      width: "100%",
+      padding: "10px",
+      borderRadius: "8px",
+      border: "none",
+      outline: "none",
+    }}
+  />
+</div>
               <h2 style={{ marginTop: "20px" }}>📸 Original Images</h2>
               <GalleryGrid
                 images={originalImages}

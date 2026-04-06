@@ -32,30 +32,14 @@ onResize
   ];
 
   return (
-    <div className={styles.editingPanel} data-theme={darkMode ? "dark" : "light"}>
-      {sections.map((section) => (
-        <div key={section.id} className={styles.sectionWrapper}>
-          <button
-            className={`${styles.sectionHeader} ${
-              activeSection === section.id ? styles.active : ""
-            } ${!isImageLoaded ? styles.disabled : ""}`}
-            onClick={() =>
-              setActiveSection(
-                activeSection === section.id ? null : section.id
-              )
-            }
-            disabled={false}
-          >
-            <span className={styles.sectionTitle}>{section.label}</span>
-            <span
-              className={`${styles.arrow} ${
-                activeSection === section.id ? styles.expanded : ""
-              }`}
-            >
-              ›
-            </span>
-          </button>
+    <div
+      className={styles.editingPanel}
+      data-theme={darkMode ? "dark" : "light"}
+    >
+      {sections.map((section) => {
+        const isActive = activeSection === section.id;
 
+<<<<<<< HEAD
          {(activeSection === section.id || !isImageLoaded) && (
             <div className={styles.sectionContent}>
               {section.id === "suggestions" && (
@@ -135,6 +119,77 @@ onResize
           )}
         </div>
       ))}
+=======
+        return (
+          <div key={section.id} className={styles.sectionWrapper}>
+            {/* HEADER */}
+            <button
+              className={`${styles.sectionHeader} ${
+                isActive ? styles.active : ""
+              } ${!isImageLoaded ? styles.disabled : ""}`}
+              onClick={() =>
+                isImageLoaded &&
+                setActiveSection(isActive ? null : section.id)
+              }
+            >
+              <span className={styles.sectionTitle}>
+                {section.label}
+              </span>
+
+              <span
+                className={`${styles.arrow} ${
+                  isActive ? styles.expanded : ""
+                }`}
+              >
+                ›
+              </span>
+            </button>
+
+            {/* CONTENT */}
+            {isActive && isImageLoaded && (
+              <div className={styles.sectionContent}>
+                {section.id === "suggestions" && (
+                  <SuggestionsPanel
+                    darkMode={darkMode}
+                    isEnabled={isImageLoaded}
+                    onApplySuggestion={onApplySuggestion}
+                    activeEffect={activeEffect}
+                  />
+                )}
+
+                {section.id === "crop" && (
+                  <CropPanel
+                    darkMode={darkMode}
+                    isEnabled={isImageLoaded}
+                    onTransform={onTransform}
+                  />
+                )}
+
+                {section.id === "adjust" && (
+                  <AdjustPanel
+                    darkMode={darkMode}
+                    isEnabled={isImageLoaded}
+                    adjustments={adjustments}
+                    onAdjustmentChange={onAdjustmentChange}
+                  />
+                )}
+
+                {section.id === "filters" && (
+                  <FilterPanel
+                    darkMode={darkMode}
+                    isEnabled={isImageLoaded}
+                    selectedFilter={selectedFilter}
+                    onFilterChange={onFilterChange}
+                    onDownload={onDownload}
+                    disableDownload={!isImageLoaded}
+                  />
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })}
+>>>>>>> 59434b0 (Rename,Search,delete as well as Login issue resolved)
     </div>
   );
 }
