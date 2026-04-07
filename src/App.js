@@ -11,6 +11,8 @@ import Home from "./components/Home";
 import { BrowserRouter } from "react-router-dom";
 import About from "./components/About";
 import Contact from "./components/Contact";
+import ConversionPage from "./components/ConversionPage";
+
 import "./App.css";
 
 
@@ -499,18 +501,16 @@ const editedImages = gallery.filter(
         )}
 
 
-        {currentPage === "conversion" && (
-          isAuthenticated ? (
-            <div style={{ color: "white", padding: "50px" }}>
-              Conversion Page
-            </div>
-          ) : (
-            <AuthPage onSuccess={() => {
-              setIsAuthenticated(true);
-              setCurrentPage("conversion");
-            }} />
-          )
-        )}
+       {currentPage === "conversion" && (
+  isAuthenticated ? (
+    <ConversionPage />
+  ) : (
+    <AuthPage onSuccess={() => {
+      setIsAuthenticated(true);
+      setCurrentPage("conversion");
+    }} />
+  )
+)}
 
 
         {/* ✏️ EDITOR */}

@@ -19,7 +19,9 @@ import {
   FaInfoCircle,
   FaEdit
 } from "react-icons/fa";
-
+import editorImg from "./editor.png";
+import conversionImg from "./conversion.png";
+import filterImg from "./filter.png";
 function Home({ setCurrentPage, isAuthenticated }) {
 
   const handleStart = () => {
@@ -136,28 +138,25 @@ function Home({ setCurrentPage, isAuthenticated }) {
       </section>
 
       {/* PREVIEW */}
-      <section className="preview">
-        <h2>Application Preview</h2>
+      {/* PREVIEW */}
+<section className="preview">
+  <h2>Application Preview</h2>
 
-        <div className="previewGrid">
+  <div className="previewGrid">
 
-          <div className="previewCard">
-            <img src="https://via.placeholder.com/300x180" alt="editor" />
-            <p>Editor UI</p>
-          </div>
+    <div className="previewCard">
+      <img src={editorImg} alt="editor" />
+      <p>Editor UI</p>
+    </div>
 
-          <div className="previewCard">
-            <img src="https://via.placeholder.com/300x180" alt="filters" />
-            <p>Filters</p>
-          </div>
 
-          <div className="previewCard">
-            <img src="https://via.placeholder.com/300x180" alt="conversion" />
-            <p>Conversion</p>
-          </div>
+    <div className="previewCard">
+      <img src={conversionImg} alt="conversion" />
+      <p>Conversion</p>
+    </div>
 
-        </div>
-      </section>
+  </div>
+</section>
 
       {/* CTA */}
       <section className="cta">
