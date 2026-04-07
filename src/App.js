@@ -1,10 +1,20 @@
+
 import React, { useMemo, useState, useRef, useEffect } from "react";
 import Header from "./components/Header";
 import UploadCard from "./components/UploadCard";
 import EditingPanel from "./components/EditingPanel";
 import ImagePreview from "./components/ImagePreview";
 import GalleryGrid from "./components/GalleryGrid";
+import AuthPage from "./components/AuthPage";
+import Register from "./components/Register";
+import Home from "./components/Home";
+import { BrowserRouter } from "react-router-dom";
+import About from "./components/About";
+import Contact from "./components/Contact";
+import ConversionPage from "./components/ConversionPage";
+
 import "./App.css";
+
 
 function makeId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
@@ -87,21 +97,37 @@ function App() {
   const [rotation, setRotation] = useState(0);
   const [flipH, setFlipH] = useState(1);
   const [flipV, setFlipV] = useState(1);
-
+  const [resizeWidth, setResizeWidth] = useState("");
+  const [resizeHeight, setResizeHeight] = useState("");
+  const [history, setHistory] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(-1);
   const uploadedFiles = useRef(new Set());
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const userId = localStorage.getItem("userId");
+  const [currentPage, setCurrentPage] = useState("home");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  console.log("Current user:", userId);
 
   // ✅ NEW: Fetch images from DB on load
   useEffect(() => {
-    fetch("http://localhost:5000/images")
+    const userId = localStorage.getItem("userId");
+
+    fetch(`http://localhost:5000/images?userId=${userId}`)
       .then((res) => res.json())
       .then(async (data) => {
         const imagesWithMeta = await Promise.all(
-          data.map((img) => resolveImageMeta(img))
+          data.map((img) =>
+            resolveImageMeta({
+              ...img,
+              type: img.type || "original", // ⭐ IMPORTANT FIX
+            })
+          )
         );
         setGallery(imagesWithMeta);
       })
       .catch((err) => console.error("Fetch error:", err));
-  }, []);
+  }, [userId]);
 
   const combinedFilterStyle = useMemo(() => {
     let baseFilter = "";
@@ -132,6 +158,9 @@ function App() {
   }, [filterType, suggestionFilter, adjustments]);
 
   const handleUpload = async (file) => {
+    const userId = localStorage.getItem("userId");
+    console.log("Uploading for user:", userId);
+
     if (!file || uploading || uploadedFiles.current.has(file.name)) return;
 
     uploadedFiles.current.add(file.name);
@@ -141,6 +170,7 @@ function App() {
     try {
       const formData = new FormData();
       formData.append("image", file);
+      formData.append("userId", userId);
 
       const response = await fetch("http://localhost:5000/upload", {
         method: "POST",
@@ -162,7 +192,9 @@ function App() {
       });
 
       setSelectedImage(withMeta);
+      saveToHistory(withMeta);
       setGallery((prev) => [withMeta, ...prev]);
+
       setSuccessMessage("Image uploaded successfully.");
     } catch (error) {
       setSuccessMessage("Upload failed. Please try again.");
@@ -173,135 +205,433 @@ function App() {
     }
   };
 
- const downloadImage = () => {
-  if (!selectedImage?.url) return;
+  const downloadImage = () => {
+    if (!selectedImage?.url) return;
 
-  const img = new Image();
-  img.crossOrigin = "anonymous";
-  img.src = selectedImage.url;
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = selectedImage.url;
 
-  img.onload = () => {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
 
-    canvas.width = img.width;
-    canvas.height = img.height;
+      canvas.width = img.width;
+      canvas.height = img.height;
 
-    ctx.filter = combinedFilterStyle;
-    ctx.drawImage(img, 0, 0);
+      ctx.filter = combinedFilterStyle;
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(img, 0, 0);
 
-    // ✅ DOWNLOAD
-    const link = document.createElement("a");
-    link.download = "edited-image.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+      // ✅ DOWNLOAD
+      const link = document.createElement("a");
+      link.download = "edited-image.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
 
-    // ✅ UPLOAD EDITED IMAGE
-    canvas.toBlob(async (blob) => {
-      const formData = new FormData();
-      formData.append("image", blob, "edited.png");
-      formData.append("type", "edited"); // ⭐ IMPORTANT
+      // ✅ UPLOAD EDITED IMAGE
+      canvas.toBlob(async (blob) => {
+        const formData = new FormData();
+        formData.append("image", blob, "edited.png");
+        const userId = localStorage.getItem("userId");
 
-      await fetch("http://localhost:5000/upload", {
-        method: "POST",
-        body: formData,
+        formData.append("type", "edited");
+        formData.append("userId", userId);
+
+        await fetch("http://localhost:5000/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        console.log("Edited image saved");
       });
+    };
+  };
 
-      console.log("Edited image saved");
+  const handleResize = () => {
+    if (!selectedImage || !resizeWidth || !resizeHeight) return;
+
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = selectedImage.url;
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      const targetWidth = parseInt(resizeWidth);
+      const targetHeight = parseInt(resizeHeight);
+
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+
+      // 🔥 IMPORTANT FIX (THIS WAS MISSING)
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+
+      // 🔥 Better scaling
+      ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+      const resizedUrl = canvas.toDataURL("image/png", 1.0); // max quality
+
+      const newImage = {
+        ...selectedImage,
+        id: Date.now(),
+        url: resizedUrl,
+        name: "resized.png",
+        type: "edited",
+        uploadedAt: new Date().toISOString(),
+      };
+
+      setSelectedImage(newImage);
+      setGallery((prev) => [newImage, ...prev]);
+      saveToHistory(newImage);
+    };
+  };
+
+  //undo redo
+
+  const saveToHistory = (newImage) => {
+    setHistory((prevHistory) => {
+      const updated = prevHistory.slice(0, currentIndex + 1);
+      updated.push(newImage);
+
+      setCurrentIndex(updated.length - 1);
+      return updated;
     });
   };
-};
-  const deleteImage = async (id) => {
-  await fetch(`http://localhost:5000/delete/${id}`, {
-    method: "DELETE",
-  });
 
-  setGallery((prev) => prev.filter((img) => img.id !== id));
+  const handleUndo = () => {
+    if (currentIndex <= 0) return;
+
+    const newIndex = currentIndex - 1;
+    const prevState = history[newIndex];
+
+    setCurrentIndex(newIndex);
+
+    setSelectedImage(prevState.image || prevState);
+
+    setRotation(prevState.rotation || 0);
+    setFlipH(prevState.flipH || 1);
+    setFlipV(prevState.flipV || 1);
+
+    setFilterType(prevState.filterType || "normal");
+    setAdjustments(prevState.adjustments || {});
+
+    setSuggestionFilter(prevState.suggestionFilter || "");
+  };
+
+  const handleRedo = () => {
+    if (currentIndex >= history.length - 1) return;
+
+    const newIndex = currentIndex + 1;
+    const nextState = history[newIndex];
+
+    setCurrentIndex(newIndex);
+
+    setSelectedImage(nextState.image || nextState);
+
+    setRotation(nextState.rotation || 0);
+    setFlipH(nextState.flipH || 1);
+    setFlipV(nextState.flipV || 1);
+
+    setFilterType(nextState.filterType || "normal");
+    setAdjustments(nextState.adjustments || {});
+
+    setSuggestionFilter(nextState.suggestionFilter || "");
+  };
+
+
+  // delete and rename
+  const deleteImage = async (id) => {
+    await fetch(`http://localhost:5000/delete/${id}`, {
+      method: "DELETE",
+    });
+
+    setGallery((prev) => prev.filter((img) => img.id !== id));
+  };
+  const handleRename = async (id, newName) => {
+  try {
+    console.log("Sending rename:", id, newName);
+
+    const res = await fetch(`http://localhost:5000/rename/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: newName }),
+    });
+
+    const data = await res.json();
+    console.log("Response:", data);
+
+    if (!res.ok) {
+      throw new Error("Rename failed");
+    }
+
+    setGallery((prev) =>
+      prev.map((img) =>
+        img.id === id ? { ...img, name: newName } : img
+      )
+    );
+
+  } catch (err) {
+    console.error(err);
+    alert("Rename failed ❌");
+  }
 };
   const handleApplySuggestion = (effectId, filterValue) => {
     setActiveEffect(effectId);
     setSuggestionFilter(filterValue);
+
+    saveToHistory({
+      image: selectedImage,
+      filterType,
+      adjustments,
+      suggestionFilter: filterValue,
+      rotation,
+      flipH,
+      flipV
+    });
   };
+
 
   const handleTransform = (type) => {
+    let newRotation = rotation;
+    let newFlipH = flipH;
+    let newFlipV = flipV;
+
     if (type === "rotateLeft") {
-      setRotation(prev => prev - 90);
-    } 
-    else if (type === "rotateRight") {
-      setRotation(prev => prev + 90);
-    } 
-    else if (type === "flipH") {
-      setFlipH(prev => prev * -1);
-    } 
-    else if (type === "flipV") {
-      setFlipV(prev => prev * -1);
+      newRotation = rotation - 90;
+      setRotation(newRotation);
     }
+    else if (type === "rotateRight") {
+      newRotation = rotation + 90;
+      setRotation(newRotation);
+    }
+    else if (type === "flipH") {
+      newFlipH = flipH * -1;
+      setFlipH(newFlipH);
+    }
+    else if (type === "flipV") {
+      newFlipV = flipV * -1;
+      setFlipV(newFlipV);
+    }
+
+    // ✅ Save FULL state for undo/redo
+    saveToHistory({
+      ...selectedImage,
+      rotation: newRotation,
+      flipH: newFlipH,
+      flipV: newFlipV
+    });
+  };
+  const handleAdjustmentChange = (adjustmentId, value) => {
+    setAdjustments((prev) => ({
+      ...prev,
+      [adjustmentId]: value
+    }));
+  };
+  const handleFilterChange = (newFilter) => {
+    setFilterType(newFilter);
+
+    saveToHistory({
+      image: selectedImage,   // ✅ important
+      filterType: newFilter,
+      adjustments,
+      rotation,
+      flipH,
+      flipV
+    });
   };
 
-  const handleAdjustmentChange = (adjustmentId, value) => {
-    setAdjustments((prev) => ({ ...prev, [adjustmentId]: value }));
-  };
+
+  const originalImages = gallery.filter(
+  (img) =>
+    (!img.type || img.type === "original") &&
+    img.name.toLowerCase().includes(searchQuery.toLowerCase())
+);
+
+const editedImages = gallery.filter(
+  (img) =>
+    img.type === "edited" &&
+    img.name.toLowerCase().includes(searchQuery.toLowerCase())
+);
 
   return (
-    <div className={`appShell ${darkMode ? "themeDark" : "themeLight"}`}>
-      <main className="appContainer">
+    <BrowserRouter>
+
+<div className={darkMode ? "themeDark" : "themeLight"}>
         <Header
+
           darkMode={darkMode}
           onToggleTheme={() => setDarkMode((prev) => !prev)}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+          isAuthenticated={isAuthenticated}
+          onLogout={() => {
+            localStorage.removeItem("userId");
+            setIsAuthenticated(false);
+            setCurrentPage("home");
+          }}
         />
+        
 
-        <section className="contentGrid">
-          <aside className="leftPane">
-            <UploadCard
-              onUpload={handleUpload}
-              uploading={uploading}
-              selectedName={selectedImage?.name}
-              successMessage={successMessage}
-            />
+        {/* 🏠 HOME */}
+        {currentPage === "home" && (
+          <Home
+            setCurrentPage={setCurrentPage}
+            isAuthenticated={isAuthenticated}
+          />
+        )}
+        {currentPage === "contact" && <Contact />}
 
-            <EditingPanel
-              darkMode={darkMode}
-              isImageLoaded={!!selectedImage}
-              activeEffect={activeEffect}
-              adjustments={adjustments}
-              onApplySuggestion={handleApplySuggestion}
-              onAdjustmentChange={handleAdjustmentChange}
-              onTransform={handleTransform}
-              selectedFilter={filterType}
-              onFilterChange={setFilterType}
-              onDownload={downloadImage}
-            />
+        {/* 📖 ABOUT */}
+        {currentPage === "about" && (
+          <About />
+        )}
 
-            <div className="downloadButtonContainer">
-              <button
-                className="downloadButton"
-                onClick={downloadImage}
-                disabled={!selectedImage}
-              >
-                ⬇ Download Image
-              </button>
-            </div>
-          </aside>
+        {/* 🔐 AUTH */}
+        {currentPage === "auth" && (
+          <AuthPage onSuccess={() => {
+            setIsAuthenticated(true);
+            setCurrentPage("editor");
+          }} />
+        )}
 
-          <section className="rightPane">
-            <ImagePreview 
-              image={selectedImage} 
-              filterStyle={combinedFilterStyle}
-              rotation={rotation}
-              flipH={flipH}
-              flipV={flipV}
-            />
-          </section>
-        </section>
 
-        <GalleryGrid
-          images={gallery}
-          onSelect={setSelectedImage}
-          onDelete={deleteImage}
-        />
-      </main>
-    </div>
+       {currentPage === "conversion" && (
+  isAuthenticated ? (
+    <ConversionPage />
+  ) : (
+    <AuthPage onSuccess={() => {
+      setIsAuthenticated(true);
+      setCurrentPage("conversion");
+    }} />
+  )
+)}
+
+
+        {/* ✏️ EDITOR */}
+        {currentPage === "editor" && (
+          isAuthenticated ? (
+            <main className="appContainer">
+
+              <section className="contentGrid">
+                <aside className="leftPane">
+                  <UploadCard
+                    onUpload={handleUpload}
+                    uploading={uploading}
+                    selectedName={selectedImage?.name}
+                    successMessage={successMessage}
+                  />
+
+                  <EditingPanel
+                    darkMode={darkMode}
+                    isImageLoaded={!!selectedImage}
+                    activeEffect={activeEffect}
+                    adjustments={adjustments}
+                    onApplySuggestion={handleApplySuggestion}
+                    onAdjustmentChange={handleAdjustmentChange}
+                    onTransform={handleTransform}
+                    selectedFilter={filterType}
+                    onFilterChange={handleFilterChange}
+                    onDownload={downloadImage}
+                    resizeWidth={resizeWidth}
+                    setResizeWidth={setResizeWidth}
+                    resizeHeight={resizeHeight}
+                    setResizeHeight={setResizeHeight}
+                    onResize={handleResize}
+                  />
+
+                  <div className="undoRedoContainer">
+                    <button
+                      onClick={handleUndo}
+                      disabled={currentIndex <= 0}
+                      className="undoBtn"
+                    >
+                      Undo
+                    </button>
+
+                    <button
+                      onClick={handleRedo}
+                      disabled={currentIndex >= history.length - 1}
+                      className="redoBtn"
+                    >
+                      Redo
+                    </button>
+                  </div>
+
+                  <div className="downloadButtonContainer">
+                    <button
+                      className="downloadButton"
+                      onClick={downloadImage}
+                      disabled={!selectedImage}
+                    >
+                      ⬇ Download Image
+                    </button>
+                  </div>
+                </aside>
+
+                <section className="rightPane">
+                  <ImagePreview
+                    image={selectedImage}
+                    filterStyle={combinedFilterStyle}
+                    rotation={rotation}
+                    flipH={flipH}
+                    flipV={flipV}
+                  />
+                </section>
+              </section>
+<div style={{ margin: "20px 0" }}>
+  <input
+    type="text"
+    placeholder="Search images..."
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+    style={{
+      width: "100%",
+      padding: "10px",
+      borderRadius: "8px",
+      border: "none",
+      outline: "none",
+    }}
+  />
+</div>
+              <h2 style={{ marginTop: "20px" }}>📸 Original Images</h2>
+              <GalleryGrid
+                images={originalImages}
+                onSelect={setSelectedImage}
+                onDelete={deleteImage}
+                onRename={handleRename}
+              />
+
+              <h2 style={{ marginTop: "20px" }}>🎨 Edited Images</h2>
+              <GalleryGrid
+                images={editedImages}
+                onSelect={setSelectedImage}
+                onDelete={deleteImage}
+                onRename={handleRename}
+              />
+
+            </main>
+          ) : (
+            <AuthPage onSuccess={() => {
+              setIsAuthenticated(true);
+              setCurrentPage("editor");
+            }} />
+
+
+          )
+        )}
+
+      </div>
+    </BrowserRouter>
+
   );
 }
+
+
 
 export default App;

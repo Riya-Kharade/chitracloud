@@ -1,0 +1,142 @@
+/* ================= BASE (DARK MODE - KEEP SAME) ================= */
+
+.contactContainer {
+  padding: 60px 80px;
+  color: white;
+  text-align: center;
+}
+
+.contactContainer h1 {
+  margin-bottom: 30px;
+  font-size: 40px;
+}
+
+.brand {
+  color: #c89b6d;
+}
+
+.contactForm {
+  max-width: 500px;
+  margin: auto;
+}
+
+/* INPUT BOX */
+.inputGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #111;
+  border: 1px solid #222;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  transition: 0.3s;
+}
+
+.inputGroup:hover {
+  border-color: #c89b6d;
+}
+
+/* INPUT */
+.inputGroup input,
+.inputGroup textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+}
+
+/* TEXTAREA */
+textarea {
+  resize: none;
+  height: 100px;
+}
+
+/* ICON */
+.icon {
+  color: #c89b6d;
+}
+
+/* BUTTON */
+.contactForm button {
+  width: 100%;
+  padding: 12px;
+  background: #c89b6d;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.contactForm button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* SUCCESS */
+.successMsg {
+  margin-top: 10px;
+  color: #4caf50;
+}
+
+/* ================= LIGHT MODE (UPDATED LIKE ABOUT PAGE) ================= */
+
+.themeLight .contactContainer {
+  background: #f5f6f8;
+  color: #111;
+}
+
+/* HEADING */
+.themeLight .contactContainer h1 {
+  color: #111;
+}
+
+/* INPUT BOX */
+.themeLight .inputGroup {
+  background: #ffffff;
+  border: 1px solid #c89b6d; /* coffee border */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* HOVER */
+.themeLight .inputGroup:hover {
+  box-shadow: 0 8px 20px rgba(200,155,109,0.25);
+}
+
+/* INPUT TEXT */
+.themeLight .inputGroup input,
+.themeLight .inputGroup textarea {
+  color: #111;
+}
+
+/* PLACEHOLDER */
+.themeLight .inputGroup input::placeholder,
+.themeLight .inputGroup textarea::placeholder {
+  color: #777;
+}
+
+/* ICON */
+.themeLight .icon {
+  color: #c89b6d;
+}
+
+/* BUTTON */
+.themeLight .contactForm button {
+  background: #c89b6d;
+  color: #111;
+  box-shadow: 0 4px 12px rgba(200,155,109,0.2);
+}
+
+.themeLight .contactForm button:hover {
+  box-shadow: 0 8px 20px rgba(200,155,109,0.3);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .contactContainer {
+    padding: 40px 20px;
+  }
+}

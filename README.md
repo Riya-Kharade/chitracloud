@@ -52,6 +52,9 @@ ChitraCloud allows users to **upload, edit, and manage images** with real-time p
 * Adjustment controls (brightness, contrast, etc.)
 * Download edited image
 * Dark / Light mode UI
+  <img width="1896" height="904" alt="image" src="https://github.com/user-attachments/assets/ddff37b1-8f47-4e01-97f2-39b60ded65ee" />
+<img width="1803" height="907" alt="image" src="https://github.com/user-attachments/assets/5a92cb32-42a2-44f8-99ca-79b2e8ce50f4" />
+
 
 ---
 
@@ -62,6 +65,9 @@ ChitraCloud allows users to **upload, edit, and manage images** with real-time p
 * 🖼 Real-time gallery system
 * 🗑 Delete image functionality
 * 🔐 Secure environment variables (.env) implementation
+* Original Photo And Edited Photo Section Added
+<img width="1872" height="837" alt="image" src="https://github.com/user-attachments/assets/6ba06b42-f9f5-4909-85da-1c8bd74f70ad" />
+
 
 ---
 
@@ -73,6 +79,8 @@ ChitraCloud allows users to **upload, edit, and manage images** with real-time p
 * 🔍 Search in Gallery
 * Rename Image
 * ⏱ Relative time (e.g., “2 mins ago”)
+<img width="1343" height="909" alt="image" src="https://github.com/user-attachments/assets/8a7008ff-10e0-4026-b287-afd9f25fdc08" />
+<img width="1306" height="587" alt="image" src="https://github.com/user-attachments/assets/1ade2a6f-8ee8-4723-9bab-e7e3c6f22c99" />
 
 ---
 

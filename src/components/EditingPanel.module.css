@@ -1,87 +1,133 @@
 .editingPanel {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
+  
+  position: relative;   /* REMOVE any sticky */
+
 }
 
+/* SECTION CARD */
 .sectionWrapper {
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  background: #1E1E1E;
-  border: 1px solid transparent;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  transition: 0.3s;
 }
 
-.editingPanel[data-theme="light"] .sectionWrapper {
-  background: #E4D4C8;
-  border-color: transparent;
-}
-
-.sectionWrapper:hover {
-  border: 1px solid #A47551;
-}
-
-.editingPanel[data-theme="light"] .sectionWrapper:hover {
-  border: 1px solid #A47551;
-}
-
+/* HEADER */
 .sectionHeader {
   width: 100%;
-  padding: 16px;
-  background: transparent;
+  padding: 14px 16px;
   border: none;
-  color: #E4D4C8;
-  font-size: 1rem;
-  font-weight: 600;
+  cursor: pointer;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
+
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 16px;
+
+  transition: all 0.25s ease;
+}
+
+/* TITLE */
+.sectionTitle {
   letter-spacing: 0.5px;
 }
 
-.editingPanel[data-theme="light"] .sectionHeader {
-  color: #332013;
+/* ARROW */
+.arrow {
+  transition: 0.3s;
+  font-size: 18px;
 }
 
-.sectionHeader:hover:not(:disabled) {
-  background: transparent;
-  color: #E4D4C8;
+.expanded {
+  transform: rotate(90deg);
 }
 
-.editingPanel[data-theme="light"] .sectionHeader:hover:not(:disabled) {
-  color: #332013;
+/* CONTENT */
+.sectionContent {
+  padding: 14px;
+  border-top: 1px solid;
 }
 
-.sectionHeader:disabled {
+/* DISABLED */
+.disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.sectionHeader.active:not(:disabled) {
-  background: transparent;
-  border-bottom: 1px solid #A47551;
+/* ================= DARK MODE ================= */
+[data-theme="dark"] .sectionWrapper {
+  background: #141414;
+  border: 1px solid #222;
+}
+
+[data-theme="dark"] .sectionHeader {
+  background: linear-gradient(145deg, #1a1a1a, #121212);
+  color: #ddd;
+}
+
+[data-theme="dark"] .sectionHeader:hover {
+  background: #c89b6d;
+}
+
+[data-theme="dark"] .active {
+  background: linear-gradient(145deg, #c89b6d, #b6895d);
+  color: #000;
+}
+
+[data-theme="dark"] .sectionContent {
+  background: #111;
+  border-color: #222;
+}
+
+/* ================= LIGHT MODE ================= */
+[data-theme="light"] .sectionWrapper {
+  background: #ffffff;
+  border: 1px solid #e6d8c8;
+}
+
+[data-theme="light"] .sectionHeader {
+  background: #f7f2ec;
+  color: #5a4a3c;
+}
+
+[data-theme="light"] .sectionHeader:hover {
+  background: #f0e6db;
+}
+
+[data-theme="light"] .active {
+  background: #c89b6d;
   color: white;
 }
 
-.editingPanel[data-theme="light"] .sectionHeader.active:not(:disabled) {
-  background: #D0B49F;
-  border: none;
-  border-bottom: none;
-  color: #332013;
+[data-theme="light"] .sectionContent {
+  background: #fff;
+  border-color: #eee;
+}
+.editorContainer {
+  display: flex;
+  gap: 40px;              /* MORE SPACE */
+  padding: 40px 80px;     /* LEFT RIGHT SPACE */
+  background: #0b0b0b;
+  min-height: 100vh;
 }
 
-.sectionTitle {
+/* LEFT SIDE */
+.editorSidebar {
+  width: 340px;           /* FIXED WIDTH */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* RIGHT SIDE */
+.editorPreview {
   flex: 1;
-  text-align: left;
-}
-
-.arrow {
-  display: inline-flex;
-  align-items: center;
+  display: flex;
   justify-content: center;
   width: 24px;
   height: 24px;
@@ -125,4 +171,91 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+/* 🔧 Resize Section */
+.resizeContainer {
+  margin-top: 15px;
+}
+
+.resizeTitle {
+  color: #D0B49F;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.resizeInputs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.resizeInput {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  background: #2a2a2a;
+  color: #fff;
+  outline: none;
+}
+
+.resizeButton {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: #D0B49F;
+  color: #000;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.resizeButton:hover {
+  background: #A47551;
+  color: #fff;
+}
+input[type="number"] {
+  width: 48%;
+  display: inline-block;
+
+  padding: 6px;
+  font-size: 13px;
+
+  border-radius: 6px;
+  border: 1px solid #D0B49F;  /* 🔥 THIS LINE ADDED */
+
+  background: #2a2a2a;
+  color: #fff;
+
+  box-sizing: border-box;
+}input[type="number"]:focus {
+  border-color: #e6c9a8;
+  box-shadow: 0 0 4px rgba(208, 180, 159, 0.6);
+}
+h4 {
+  margin: 6px 0 8px 0; /* 🔥 reduce top & bottom space */
+}
+
+input[type="number"] {
+  margin: 4px 0; /* reduce spacing */
+}
+
+button {
+  margin-top: 8px; /* less gap */
+}
+.resizeSection {
+  margin-top: 10px;
+}
+
+.resizeSection h4 {
+  margin-bottom: 6px;
+}
+
+.resizeSection input {
+  margin: 2px 0;
+}
+
+.resizeSection button {
+  margin-top: 6px;
 }

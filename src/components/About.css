@@ -1,0 +1,130 @@
+/* ================= BASE ================= */
+
+.aboutContainer {
+  padding: 60px 80px;
+  color: white;
+  min-height: 100vh;  /* fills full screen */
+
+}
+
+/* HERO */
+.aboutHero {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.aboutHero h1 {
+  font-size: 40px;
+}
+
+.brand {
+  color: #c89b6d;
+}
+
+.aboutHero p {
+  color: #aaa;
+  margin-top: 10px;
+}
+
+/* GRID */
+.aboutContent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+/* CARD */
+.aboutCard {
+  background: #111;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid #222;
+  transition: 0.3s;
+}
+
+/* HOVER */
+.aboutCard:hover {
+  transform: translateY(-6px);
+  border-color: #c89b6d;
+  box-shadow: 0 10px 30px rgba(200,155,109,0.15);
+}
+
+/* ICON */
+.topIcon {
+  color: #c89b6d;
+  width: 32px;
+  height: 32px;
+  background: rgba(200,155,109,0.1);
+  padding: 10px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+
+/* TITLE */
+.aboutCard h2 {
+  margin-top: 10px;
+}
+
+/* TEXT */
+.aboutCard p {
+  color: #aaa;
+  font-size: 14px;
+}
+
+/* ================= LIGHT MODE ================= */
+
+.themeLight .aboutContainer {
+  background: #f5f6f8;
+  color: #111;
+}
+
+/* HERO */
+.themeLight .aboutHero h1 {
+  color: #111;
+}
+
+.themeLight .aboutHero p {
+  color: #666;
+}
+
+/* CARDS */
+.themeLight .aboutCard {
+  background: #ffffff;
+  border: 1px solid #c89b6d; /* coffee border */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* HOVER */
+.themeLight .aboutCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(200,155,109,0.25);
+}
+
+/* ICON */
+.themeLight .topIcon {
+  background: rgba(200,155,109,0.15);
+  color: #c89b6d;
+}
+
+/* TITLE */
+.themeLight .aboutCard h2 {
+  color: #111;
+}
+
+/* TEXT */
+.themeLight .aboutCard p {
+  color: #555;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+  .aboutContent {
+    grid-template-columns: 1fr;
+  }
+
+  .aboutContainer {
+    padding: 40px 20px;
+  }
+}

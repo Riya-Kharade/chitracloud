@@ -1,0 +1,108 @@
+/* ================= TITLE ================= */
+
+.title {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* DARK */
+.themeDark .title {
+  color: #ffffff;
+}
+
+/* LIGHT */
+.themeLight .title {
+  color: #6b4f3b;
+}
+
+/* ================= INPUT ================= */
+
+.input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.2s;
+}
+
+/* DARK INPUT */
+.themeDark .input {
+  background: #111;
+  border: 1px solid #222;
+  color: white;
+}
+
+/* LIGHT INPUT */
+.themeLight .input {
+  background: #ffffff;
+  border: 1px solid #c89b6d;
+  color: #333;
+}
+
+/* FOCUS (COMMON) */
+.input:focus {
+  border-color: #c89b6d;
+  box-shadow: 0 0 0 2px rgba(200, 155, 109, 0.2);
+}
+
+/* ================= BUTTON ================= */
+
+.button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #c89b6d;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* DARK BUTTON */
+.themeDark .button {
+  color: black;
+}
+
+/* LIGHT BUTTON */
+.themeLight .button {
+  color: white;
+}
+
+.button:hover {
+  background: #b6895d;
+  transform: translateY(-2px);
+}
+
+/* ================= DIVIDER ================= */
+
+.divider {
+  height: 1px;
+  margin: 15px 0;
+}
+
+/* DARK */
+.themeDark .divider {
+  background: #222;
+}
+
+/* LIGHT */
+.themeLight .divider {
+  background: #e5d8c8;
+}
+
+/* ================= ERROR ================= */
+
+.error {
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* DARK */
+.themeDark .error {
+  color: #ff6b6b;
+}
+
+/* LIGHT */
+.themeLight .error {
+  color: #e74c3c;
+}

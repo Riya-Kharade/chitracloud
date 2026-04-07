@@ -1,0 +1,229 @@
+/* ================= BASE ================= */
+
+.authContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;   /* 🔥 THIS IS IMPORTANT */
+  justify-content: center;
+  align-items: center;
+  gap: 20px;               /* space between header & card */
+  margin-top: -80px;
+}
+
+/* CARD */
+.authCard {
+  width: 380px;
+  padding: 25px;
+  border-radius: 16px;
+  transition: 0.3s;
+}
+
+/* TABS */
+.authTabs {
+  display: flex;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.authTab {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.authTab.active {
+  font-weight: 600;
+}
+
+/* ================= DARK MODE (DEFAULT) ================= */
+
+.themeDark .authContainer {
+  background: #0b0b0b;
+}
+
+.themeDark .authCard {
+  background: #111;
+  border: 1px solid #222;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.themeDark .authTabs {
+  background: #1a1a1a;
+}
+
+.themeDark .authTab {
+  color: #aaa;
+}
+
+.themeDark .authTab.active {
+  background: #c89b6d;
+  color: black;
+}
+
+/* ================= LIGHT MODE ================= */
+
+.themeLight .authContainer {
+  background: #f5f6f8;
+}
+
+.themeLight .authCard {
+  background: #ffffff;
+  border: 1px solid #c89b6d;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.themeLight .authTabs {
+  background: #f1e4d6;
+}
+
+.themeLight .authTab {
+  color: #6b5b4d;
+}
+
+.themeLight .authTab.active {
+  background: #c89b6d;
+  color: white;
+}
+
+/* ================= INPUTS (COMMON STYLE LIKE CONTACT) ================= */
+
+.authInputGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  transition: 0.3s;
+}
+
+/* DARK INPUT */
+.themeDark .authInputGroup {
+  background: #111;
+  border: 1px solid #222;
+}
+
+.themeDark .authInputGroup input {
+  color: white;
+}
+
+/* LIGHT INPUT */
+.themeLight .authInputGroup {
+  background: #ffffff;
+  border: 1px solid #c89b6d;
+}
+
+.themeLight .authInputGroup input {
+  color: #111;
+}
+
+/* INPUT COMMON */
+.authInputGroup input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+/* BUTTON */
+.authButton {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #c89b6d;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.authButton:hover {
+  transform: translateY(-2px);
+}
+/* HEADER */
+.authHeader {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.authHeader h1 {
+  margin-bottom: 8px;
+  font-size: 40px;
+}
+
+.authHeader p {
+  font-size: 18px;
+}
+
+/* DARK */
+.themeDark .authHeader h1 {
+  color: #fff;
+}
+
+.themeDark .authHeader p {
+  color: #aaa;
+}
+
+/* LIGHT */
+.themeLight .authHeader h1 {
+  color: #111;
+}
+
+.themeLight .authHeader p {
+  color: #666;
+}
+
+/* BRAND COLOR */
+.brand {
+  color: #c89b6d;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* 📱 Tablet */
+@media (max-width: 768px) {
+
+  .authHeader h1 {
+    font-size: 26px;
+  }
+
+  .authCard {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .authTab {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+/* 📱 Mobile */
+@media (max-width: 480px) {
+
+  .authContainer {
+    padding: 15px;
+  }
+
+  .authHeader h1 {
+    font-size: 22px;
+  }
+
+  .authHeader p {
+    font-size: 13px;
+  }
+
+  .authCard {
+    width: 100%;
+    padding: 18px;
+  }
+
+  .authTab {
+    font-size: 13px;
+    padding: 8px;
+  }
+}
