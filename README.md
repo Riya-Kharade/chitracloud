@@ -52,8 +52,6 @@ ChitraCloud allows users to **upload, edit, and manage images** with real-time p
 * Adjustment controls (brightness, contrast, etc.)
 * Download edited image
 * Dark / Light mode UI
-  <img width="1896" height="904" alt="image" src="https://github.com/user-attachments/assets/ddff37b1-8f47-4e01-97f2-39b60ded65ee" />
-<img width="1803" height="907" alt="image" src="https://github.com/user-attachments/assets/5a92cb32-42a2-44f8-99ca-79b2e8ce50f4" />
 
 
 ---
@@ -66,12 +64,11 @@ ChitraCloud allows users to **upload, edit, and manage images** with real-time p
 * 🗑 Delete image functionality
 * 🔐 Secure environment variables (.env) implementation
 * Original Photo And Edited Photo Section Added
-<img width="1872" height="837" alt="image" src="https://github.com/user-attachments/assets/6ba06b42-f9f5-4909-85da-1c8bd74f70ad" />
 
 
 ---
 
-### 🔵 Phase 3 (Planned – Advanced Editing & UX)
+### 🔵 Phase 3 (Completed – Advanced Editing & UX)
 
 * Undo / Redo functionality
 * Advanced Crop Tool
@@ -79,25 +76,19 @@ ChitraCloud allows users to **upload, edit, and manage images** with real-time p
 * 🔍 Search in Gallery
 * Rename Image
 * ⏱ Relative time (e.g., “2 mins ago”)
-<img width="1343" height="909" alt="image" src="https://github.com/user-attachments/assets/8a7008ff-10e0-4026-b287-afd9f25fdc08" />
-<img width="1306" height="587" alt="image" src="https://github.com/user-attachments/assets/1ade2a6f-8ee8-4723-9bab-e7e3c6f22c99" />
 
 ---
 
-### 🟣 Phase 4 (Planned – User System & Personalization)
+### 🟣 Phase 4 (Completed – User System & Personalization)
 
 * 🔐 User Authentication (AWS Cognito)
 * 📂 Personal user storage
 * 👤 User-specific gallery
-* 🔗 Shareable image links
 
 ---
 
-### 🔴 Phase 5 (Planned – Performance & AI)
+### 🔴 Phase 5 (Completed – UI)
 
-* ⚡ Image optimization (compression)
-* 🌐 CloudFront integration (faster delivery)
-* 🤖 AI-powered filters & enhancements
 * 📊 Dashboard (usage analytics)
 
 ---
@@ -113,10 +104,9 @@ ChitraCloud allows users to **upload, edit, and manage images** with real-time p
 
 * **Amazon DynamoDB** → Metadata storage
 
-### 🔜 Planned
+### Completed (Phase 3)
 
-* **AWS Lambda** → Serverless processing
-* **CloudFront** → Fast delivery
+* **CloudTimer** → Add Time
 * **AWS Cognito** → Authentication
 
 ---
@@ -127,7 +117,7 @@ ChitraCloud allows users to **upload, edit, and manage images** with real-time p
 | -------- | ----------------- |
 | Frontend | React.js          |
 | Backend  | Node.js + Express |
-| Cloud    | AWS S3,IAM, DynamoDB  |
+| Cloud    | AWS S3,IAM, DynamoDB, Cognito, CloudTimer  |
 | Styling  | CSS Modules       |
 
 ---
