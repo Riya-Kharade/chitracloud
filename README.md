@@ -106,7 +106,6 @@ ChitraCloud allows users to **upload, edit, and manage images** with real-time p
 
 ### Completed (Phase 3)
 
-* **CloudTimer** → Add Time
 * **AWS Cognito** → Authentication
 
 ---
@@ -117,7 +116,7 @@ ChitraCloud allows users to **upload, edit, and manage images** with real-time p
 | -------- | ----------------- |
 | Frontend | React.js          |
 | Backend  | Node.js + Express |
-| Cloud    | AWS S3,IAM, DynamoDB, Cognito, CloudTimer  |
+| Cloud    | AWS S3,IAM, DynamoDB, CloudTimer  |
 | Styling  | CSS Modules       |
 
 ---
