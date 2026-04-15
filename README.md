@@ -42,6 +42,14 @@ ChitraCloud allows users to **upload, edit, and manage images** with real-time p
 
 ---
 
+## 🎥 Live Demo
+
+Watch the working of **ChitraCloud** in action:
+
+[▶️ Watch Demo Video](https://drive.google.com/file/d/1PV9a-39059WpT7MgqtIrXRanvzwSFNOX/view?usp=drive_link)
+
+---
+
 ## 🧠 Development Roadmap
 
 ### 🟢 Phase 1 (Completed – Core Application)
